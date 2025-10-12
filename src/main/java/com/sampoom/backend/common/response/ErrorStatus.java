@@ -13,7 +13,7 @@ public enum ErrorStatus {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     MISSING_EMAIL_VERIFICATION_EXCEPTION(HttpStatus.BAD_REQUEST, "이메일 인증을 진행해주세요."),
     ALREADY_REGISTER_EMAIL_EXCEPETION(HttpStatus.BAD_REQUEST, "이미 가입된 이메일 입니다."),
-
+    STOCK_INSUFFICIENT(HttpStatus.BAD_REQUEST, "재고 수량이 부족합니다."),
 
     // 401 UNAUTHORIZED
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
@@ -23,6 +23,9 @@ public enum ErrorStatus {
 
     // 404 NOT_FOUND
     NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 리소스를 찾을 수 없습니다."),
+    STOCK_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 재고를 찾을 수 없습니다."),
+    AGENCY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 대리점을 찾을 수 없습니다."),
+    PART_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 부품을 찾을 수 없습니다."),
 
 
 
