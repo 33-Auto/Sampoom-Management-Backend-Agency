@@ -1,5 +1,6 @@
 package com.sampoom.backend.api.stock.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class StockOutboundRequestDTO {
 
+    @Valid
     private List<StockItem> items;
 
     @Getter

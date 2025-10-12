@@ -1,5 +1,6 @@
 package com.sampoom.backend.api.part.controller;
 
+import com.sampoom.backend.api.part.dto.PartWithStockResponseDTO;
 import com.sampoom.backend.api.part.feign.dto.CategoryResponseDTO;
 import com.sampoom.backend.api.part.feign.dto.PartGroupResponseDTO;
 import com.sampoom.backend.api.part.feign.dto.PartResponseDTO;
@@ -44,11 +45,11 @@ public class PartController {
 
     @Operation(summary = "대리점 별 부품 목록 조회 (그룹 기준)", description = "대리점 별 부품 목록 조회")
     @GetMapping("/group/{groupId}")
-    public ResponseEntity<ApiResponse<List<PartResponseDTO>>> getParts(
+    public ResponseEntity<ApiResponse<List<PartWithStockResponseDTO>>> getParts(
             @PathVariable Long agencyId,
             @PathVariable Long groupId
     ) {
-        List<PartResponseDTO> partList = partService.getParts(agencyId, groupId);
+        List<PartWithStockResponseDTO> partList = partService.getPartsWithStock(agencyId, groupId);
         return ApiResponse.success(SuccessStatus.PART_LIST_SUCCESS, partList);
     }
 }

@@ -25,16 +25,6 @@ public class StockController {
 
     private final StockService stockService;
 
-    @Operation(summary = "대리점 재고 목록 조회", description = "대리점의 전체 재고 목록을 조회")
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<StockResponseDTO>>> getStocksByAgency(@PathVariable Long agencyId) {
-
-        // 서비스 호출해서 데이터 가져오기
-        List<StockResponseDTO> stockList = stockService.getStockList(agencyId);
-
-        return ApiResponse.success(SuccessStatus.STOCK_LIST_SUCCESS, stockList);
-    }
-
     @Operation(summary = "대리점 재고 입고 처리", description = "대리점 재고 입고 처리")
     @PostMapping("/inbound")
     public ResponseEntity<ApiResponse<Void>> inboundStock(
