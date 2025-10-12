@@ -66,15 +66,12 @@ jobs:
             network=host
 
       - name: Build & Push (agency)
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
         uses: docker/build-push-action@v6
-        env:
-          BUILDKIT_PROGRESS: plain
         with:
           context: .
           file: ./Dockerfile
           push: true
-          no-cache: true
-          provenance: false
           tags: |
             ${{ steps.vars.outputs.IMAGE }}:${{ steps.vars.outputs.TAG_VERSION }}
             ${{ steps.vars.outputs.IMAGE }}:${{ steps.vars.outputs.TAG_LATEST }}
