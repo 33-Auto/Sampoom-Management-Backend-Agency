@@ -24,8 +24,10 @@ public enum SuccessStatus {
     AGENCY_DETAIL_SUCCESS(HttpStatus.OK, "대리점 상세 조회 성공"),
 
     CART_ADD_SUCCESS(HttpStatus.OK,  "장바구니 담기 성공"),
-    CART_LIST_SUCCESS(HttpStatus.OK, "장바구니 조회 성공"),
-    CART_CLEAR_SUCCESS(HttpStatus.OK, "장바구니 초기화 성공"),
+    CART_LIST_SUCCESS(HttpStatus.OK, "장바구니 목록 조회 성공"),
+    CART_UPDATE_SUCCESS(HttpStatus.OK, "장바구니 수량 수정 성공"),
+    CART_DELETE_SUCCESS(HttpStatus.OK, "장바구니 항목 삭제 성공"),
+    CART_CLEAR_SUCCESS(HttpStatus.OK, "장바구니 전체 비우기 성공"),
 
     CATEGORY_LIST_SUCCESS(HttpStatus.OK, "카테고리 목록 조회 성공"),
     GROUP_LIST_SUCCESS(HttpStatus.OK, "그룹 목록 조회 성공"),
