@@ -12,19 +12,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 // Part 서버의 REST API 호출용 클라이언트
-@FeignClient(name = "partClient", url = "http://3.38.218.173:8080/api/parts")
+@FeignClient(name = "partClient", url = "${part-service.url}")
 public interface PartClient {
 
     // 부품 카테고리 목록 조회
-    @GetMapping("/categories")
+    @GetMapping("/api/parts/categories")
     ApiResponse<List<CategoryResponseDTO>> getCategories();
 
     // 카테고리별 그룹 목록 조회
-    @GetMapping("/categories/{categoryId}/groups")
+    @GetMapping("/api/parts/categories/{categoryId}/groups")
     ApiResponse<List<PartGroupResponseDTO>> getGroupsByCategory(@PathVariable("categoryId") Long categoryId);
 
     // 그룹별 부품 목록 조회
-    @GetMapping
+    @GetMapping("/api/parts")
     ApiResponse<List<PartResponseDTO>> getPartsByGroup(@RequestParam("groupId") Long groupId);
+
+    // 부품 단일 조회
+    @GetMapping("/api/parts/{partId}")
+    ApiResponse<PartResponseDTO> getPartById(@PathVariable("partId") Long partId);
 }
 

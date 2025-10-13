@@ -14,6 +14,8 @@ public enum ErrorStatus {
     MISSING_EMAIL_VERIFICATION_EXCEPTION(HttpStatus.BAD_REQUEST, "이메일 인증을 진행해주세요."),
     ALREADY_REGISTER_EMAIL_EXCEPETION(HttpStatus.BAD_REQUEST, "이미 가입된 이메일 입니다."),
     STOCK_INSUFFICIENT(HttpStatus.BAD_REQUEST, "재고 수량이 부족합니다."),
+    AGENCY_CART_MISMATCH(HttpStatus.BAD_REQUEST, "해당 대리점의 장바구니 항목이 아닙니다."),
+    CART_EMPTY(HttpStatus.BAD_REQUEST, "장바구니가 비어 있습니다."),
 
     // 401 UNAUTHORIZED
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
@@ -26,6 +28,7 @@ public enum ErrorStatus {
     STOCK_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 재고를 찾을 수 없습니다."),
     AGENCY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 대리점을 찾을 수 없습니다."),
     PART_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 부품을 찾을 수 없습니다."),
+    CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니 항목을 찾을 수 없습니다."),
 
 
 
