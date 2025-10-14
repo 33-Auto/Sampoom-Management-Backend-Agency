@@ -20,7 +20,7 @@ import java.util.List;
 
 @Tag(name = "Part", description = "대리점 전용 부품 조회 API")
 @RestController
-@RequestMapping("/api/agency/{agencyId}")
+@RequestMapping("/{agencyId}")
 @RequiredArgsConstructor
 public class PartController {
 

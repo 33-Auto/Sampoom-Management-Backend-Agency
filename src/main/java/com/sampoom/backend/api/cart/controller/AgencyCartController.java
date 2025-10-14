@@ -16,7 +16,7 @@ import java.util.List;
 
 @Tag(name = "Agency Cart", description = "대리점 장바구니 API")
 @RestController
-@RequestMapping("/api/agency/{agencyId}/cart")
+@RequestMapping("/{agencyId}/cart")
 @RequiredArgsConstructor
 public class AgencyCartController {
 
