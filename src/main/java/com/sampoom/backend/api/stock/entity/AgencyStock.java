@@ -1,5 +1,7 @@
 package com.sampoom.backend.api.stock.entity;
 
+import com.sampoom.backend.api.agency.entity.Agency;
+import com.sampoom.backend.api.partread.entity.Part;
 import com.sampoom.backend.common.entitiy.BaseTimeEntity;
 import com.sampoom.backend.common.exception.BadRequestException;
 import com.sampoom.backend.common.response.ErrorStatus;
@@ -21,11 +23,10 @@ public class AgencyStock extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long agencyId;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "agency_id")
-//    private Agency agency;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agency_id")
+    private Agency agency;
 
     private Long partId;
 
@@ -43,21 +44,12 @@ public class AgencyStock extends BaseTimeEntity {
         this.quantity = restQuantity;
     }
 
-    public static AgencyStock create(Long agencyId, Long partId, int quantity) {
-        return AgencyStock.builder()
-                .agencyId(agencyId)
-                .partId(partId)
-                .quantity(quantity)
-                .build();
-    }
-
-    // 실제 Agency 연관관계 사용 시
-    // public static AgencyStock create(Agency agency, Long partId, int quantity) {
-    //     return AgencyStock.builder()
-    //             .agency(agency)
-    //             .partId(partId)
-    //             .quantity(quantity)
-    //             .build();
-    // }
+     public static AgencyStock create(Agency agency, Long partId, int quantity) {
+         return AgencyStock.builder()
+                 .agency(agency)
+                 .partId(partId)
+                 .quantity(quantity)
+                 .build();
+     }
 
 }

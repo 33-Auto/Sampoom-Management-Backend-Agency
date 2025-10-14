@@ -32,6 +32,7 @@ public enum SuccessStatus {
     CATEGORY_LIST_SUCCESS(HttpStatus.OK, "카테고리 목록 조회 성공"),
     GROUP_LIST_SUCCESS(HttpStatus.OK, "그룹 목록 조회 성공"),
     PART_LIST_SUCCESS(HttpStatus.OK, "부품 목록 조회 성공"),
+    PART_SEARCH_SUCCESS(HttpStatus.OK, "부품 검색 성공"),
     ;
 
 
