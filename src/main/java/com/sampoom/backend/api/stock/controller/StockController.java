@@ -19,7 +19,7 @@ import java.util.List;
 @Tag(name = "Stock", description = "재고 API")
 @Slf4j
 @RestController
-@RequestMapping("/api/agency/{agencyId}/stocks")
+@RequestMapping("/{agencyId}/stocks")
 @RequiredArgsConstructor
 public class StockController {
 
