@@ -10,10 +10,18 @@ import org.springframework.http.HttpStatus;
 public class BaseException extends RuntimeException {
     HttpStatus statusCode;
     String responseMessage;
+    int errorCode;
 
     public BaseException(HttpStatus statusCode) {
         super();
         this.statusCode = statusCode;
+    }
+
+    public BaseException(HttpStatus statusCode, String responseMessage, int errorCode) {
+        super(responseMessage);
+        this.statusCode = statusCode;
+        this.responseMessage = responseMessage;
+        this.errorCode = errorCode;
     }
 
     public BaseException(HttpStatus statusCode, String responseMessage) {

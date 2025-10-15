@@ -1,5 +1,7 @@
 package com.sampoom.backend.api.cart.entity;
 
+import com.sampoom.backend.api.agency.entity.Agency;
+import com.sampoom.backend.api.partread.entity.Part;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +20,14 @@ public class AgencyCartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long agencyId;
-    private Long partId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agency_id")
+    private Agency agency;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "part_id")
+    private Part part;
+
     private int quantity;
 
     public void updateQuantity(int quantity) {

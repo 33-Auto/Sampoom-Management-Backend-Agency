@@ -5,9 +5,7 @@ import com.sampoom.backend.api.partread.dto.PartWithStockResponseDTO;
 import com.sampoom.backend.api.partread.dto.CategoryResponseDTO;
 import com.sampoom.backend.api.partread.dto.PartGroupResponseDTO;
 import com.sampoom.backend.api.partread.entity.Part;
-import com.sampoom.backend.api.stock.entity.AgencyStock;
 import com.sampoom.backend.api.stock.service.StockService;
-import com.sampoom.backend.common.exception.BadRequestException;
 import com.sampoom.backend.common.exception.NotFoundException;
 import com.sampoom.backend.common.response.ErrorStatus;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +41,7 @@ public class PartService {
 
         // 대리점 존재 여부 확인
         agencyRepository.findById(agencyId)
-                .orElseThrow(() -> new BadRequestException("존재하지 않는 대리점입니다."));
+                .orElseThrow(() ->  new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
 
         List<Part> parts = partReadService.getPartsByGroup(groupId);
         Map<Long, Integer> stockMap = stockService.getStockByAgency(agencyId);
@@ -61,7 +59,7 @@ public class PartService {
 
         // 대리점 존재 여부 확인
         agencyRepository.findById(agencyId)
-                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
 
         List<Part> parts = partReadService.searchParts(keyword);
         Map<Long, Integer> stockMap = stockService.getStockByAgency(agencyId);

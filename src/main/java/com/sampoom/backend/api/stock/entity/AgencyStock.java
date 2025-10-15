@@ -39,7 +39,7 @@ public class AgencyStock extends BaseTimeEntity {
     public void decreaseQuantity(int quantity) {
         int restQuantity = this.quantity - quantity;
         if (restQuantity < 0) {
-            throw new BadRequestException(ErrorStatus.STOCK_INSUFFICIENT.getMessage());
+            throw new BadRequestException(ErrorStatus.STOCK_INSUFFICIENT);
         }
         this.quantity = restQuantity;
     }
