@@ -53,3 +53,7 @@ out/
 !gradle/wrapper/gradle-wrapper.properties
 !gradlew
 !gradlew.bat
+
+# macOS system files
+.DS_Store
+**/.DS_Store

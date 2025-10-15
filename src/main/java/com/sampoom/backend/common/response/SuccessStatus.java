@@ -33,6 +33,12 @@ public enum SuccessStatus {
     GROUP_LIST_SUCCESS(HttpStatus.OK, "그룹 목록 조회 성공"),
     PART_LIST_SUCCESS(HttpStatus.OK, "부품 목록 조회 성공"),
     PART_SEARCH_SUCCESS(HttpStatus.OK, "부품 검색 성공"),
+
+    ORDER_CREATE_SUCCESS(HttpStatus.CREATED, "주문이 생성되었습니다."),
+    ORDER_LIST_SUCCESS(HttpStatus.OK, "주문 목록 조회 성공"),
+    ORDER_DETAIL_SUCCESS(HttpStatus.OK, "주문 상세 조회 성공"),
+    ORDER_RECEIVE_SUCCESS(HttpStatus.OK, "주문이 입고 완료되었습니다."),
+    ORDER_CANCEL_SUCCESS(HttpStatus.OK, "주문이 취소되었습니다."),
     ;
 
 
