@@ -29,7 +29,7 @@ public class AgencyCartService {
     public void addCartItem(Long agencyId, AgencyCartRequestDTO agencyCartRequestDTO) {
         // Agency 조회
         Agency agency = agencyRepository.findById(agencyId)
-                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
 
         // Part 조회
         Part part = partReadService.getPartById(agencyCartRequestDTO.getPartId()); // 수정됨
@@ -56,7 +56,7 @@ public class AgencyCartService {
     public List<AgencyCartResponseDTO> getCartItems(Long agencyId) {
         // Agency 조회
         Agency agency = agencyRepository.findById(agencyId)
-                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
 
         List<AgencyCartItem> items = agencyCartItemRepository.findByAgency_Id(agencyId);
 
@@ -75,10 +75,10 @@ public class AgencyCartService {
     @Transactional
     public void updateCartItem(Long agencyId, Long cartItemId, AgencyCartRequestDTO dto) {
         AgencyCartItem item = agencyCartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new NotFoundException(ErrorStatus.CART_ITEM_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.CART_ITEM_NOT_FOUND));
 
         if (!item.getAgency().getId().equals(agencyId)) {
-            throw new NotFoundException(ErrorStatus.AGENCY_CART_MISMATCH.getMessage());
+            throw new NotFoundException(ErrorStatus.AGENCY_CART_MISMATCH);
         }
 
         item.updateQuantity(dto.getQuantity());
@@ -88,10 +88,10 @@ public class AgencyCartService {
     @Transactional
     public void deleteCartItem(Long agencyId, Long cartItemId) {
         AgencyCartItem item = agencyCartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new NotFoundException(ErrorStatus.CART_ITEM_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.CART_ITEM_NOT_FOUND));
 
         if (!item.getAgency().getId().equals(agencyId)) {
-            throw new NotFoundException(ErrorStatus.AGENCY_CART_MISMATCH.getMessage());
+            throw new NotFoundException(ErrorStatus.AGENCY_CART_MISMATCH);
         }
 
         agencyCartItemRepository.delete(item);

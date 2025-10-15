@@ -41,7 +41,7 @@ public class PartService {
 
         // 대리점 존재 여부 확인
         agencyRepository.findById(agencyId)
-                .orElseThrow(() ->  new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND.getMessage()));
+                .orElseThrow(() ->  new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
 
         List<Part> parts = partReadService.getPartsByGroup(groupId);
         Map<Long, Integer> stockMap = stockService.getStockByAgency(agencyId);
@@ -59,7 +59,7 @@ public class PartService {
 
         // 대리점 존재 여부 확인
         agencyRepository.findById(agencyId)
-                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
 
         List<Part> parts = partReadService.searchParts(keyword);
         Map<Long, Integer> stockMap = stockService.getStockByAgency(agencyId);

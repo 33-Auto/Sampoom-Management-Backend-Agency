@@ -44,6 +44,6 @@ public class PartReadService {
     // 부품 ID로 부품 조회
     public Part getPartById(Long partId) {
         return partRepository.findById(partId)
-                .orElseThrow(() -> new NotFoundException(ErrorStatus.PART_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.PART_NOT_FOUND));
     }
 }
