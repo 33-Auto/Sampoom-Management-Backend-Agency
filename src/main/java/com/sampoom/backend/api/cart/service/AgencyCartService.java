@@ -100,6 +100,9 @@ public class AgencyCartService {
     // 장바구니 전체 비우기
     @Transactional
     public void clearCart(Long agencyId) {
+        agencyRepository.findById(agencyId)
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
+
         List<AgencyCartItem> items = agencyCartItemRepository.findByAgency_Id(agencyId);
         agencyCartItemRepository.deleteAll(items);
     }
