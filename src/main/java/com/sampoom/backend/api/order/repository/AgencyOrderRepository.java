@@ -12,6 +12,8 @@ public interface AgencyOrderRepository extends JpaRepository<AgencyOrder, Long> 
 
     List<AgencyOrder> findByAgencyId(Long agencyId);
 
+    List<AgencyOrder> findByAgencyIdOrderByCreatedAtDesc(Long agencyId);
+
     Optional<AgencyOrder> findByIdAndAgencyId(Long orderId, Long agencyId);
 
     @Query("SELECT COUNT(o) FROM AgencyOrder o WHERE o.createdAt BETWEEN :start AND :end")

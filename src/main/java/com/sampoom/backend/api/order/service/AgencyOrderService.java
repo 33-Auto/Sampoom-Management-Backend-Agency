@@ -9,8 +9,10 @@ import com.sampoom.backend.api.order.dto.AgencyOrderResponseDTO;
 import com.sampoom.backend.api.order.entity.AgencyOrder;
 import com.sampoom.backend.api.order.entity.AgencyOrderItem;
 import com.sampoom.backend.api.order.entity.OrderStatus;
-import com.sampoom.backend.api.order.repository.AgencyOrderItemRepository;
 import com.sampoom.backend.api.order.repository.AgencyOrderRepository;
+import com.sampoom.backend.api.partread.entity.Category;
+import com.sampoom.backend.api.partread.entity.Part;
+import com.sampoom.backend.api.partread.entity.PartGroup;
 import com.sampoom.backend.api.partread.repository.CategoryRepository;
 import com.sampoom.backend.api.partread.repository.PartGroupRepository;
 import com.sampoom.backend.api.partread.repository.PartRepository;
@@ -24,7 +26,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,7 +88,7 @@ public class AgencyOrderService {
 
         Agency agency = validateAgency(agencyId);
 
-        return agencyOrderRepository.findByAgencyId(agencyId).stream()
+        return agencyOrderRepository.findByAgencyIdOrderByCreatedAtDesc(agencyId).stream()
                 .map(order -> mapToOrderResponse(order, agency.getName()))
                 .collect(Collectors.toList());
     }
@@ -147,16 +151,41 @@ public class AgencyOrderService {
     }
 
     private AgencyOrderResponseDTO mapToOrderResponse(AgencyOrder order, String agencyName) {
+
+        // 주문 아이템에서 모든 partId 수집
+        Set<Long> partIds = order.getItems().stream()
+                .map(AgencyOrderItem::getPartId)
+                .collect(Collectors.toSet());
+
+        // 부품 ID들 한 번에 조회
+        Map<Long, Part> partMap = partRepository.findAllById(partIds).stream()
+                .collect(Collectors.toMap(Part::getId, p -> p));
+
+        // 그룹 ID 전부 추출 후 한 번에 조회
+        Set<Long> groupIds = partMap.values().stream()
+                .map(Part::getGroupId)
+                .collect(Collectors.toSet());
+
+        Map<Long, PartGroup> groupMap = partGroupRepository.findAllById(groupIds).stream()
+                .collect(Collectors.toMap(PartGroup::getId, g -> g));
+
+        // 카테고리 ID 추출 후 한 번에 조회
+        Set<Long> categoryIds = groupMap.values().stream()
+                .map(PartGroup::getCategoryId)
+                .collect(Collectors.toSet());
+
+        Map<Long, Category> categoryMap = categoryRepository.findAllById(categoryIds).stream()
+                .collect(Collectors.toMap(Category::getId, c -> c));
+
+        // 매핑
         List<AgencyOrderItemResponseDTO> itemDTOs = order.getItems().stream()
                 .map(item -> {
                     // Part 정보 조회
-                    var part = partRepository.findById(item.getPartId()).orElse(null);
+                    Part part = partMap.get(item.getPartId());
                     if (part == null) return null;
 
-                    var group = partGroupRepository.findById(part.getGroupId()).orElse(null);
-                    var category = (group != null)
-                            ? categoryRepository.findById(group.getCategoryId()).orElse(null)
-                            : null;
+                    PartGroup group = groupMap.get(part.getGroupId());
+                    Category category = categoryMap.get(group.getCategoryId());
 
                     return AgencyOrderItemResponseDTO.builder()
                             .partId(part.getId())
