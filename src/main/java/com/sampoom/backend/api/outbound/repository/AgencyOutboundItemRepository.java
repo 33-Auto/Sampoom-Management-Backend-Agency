@@ -1,7 +1,7 @@
 package com.sampoom.backend.api.outbound.repository;
 
 import com.sampoom.backend.api.outbound.entity.AgencyOutboundItem;
-import feign.Param;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -18,5 +18,5 @@ public interface AgencyOutboundItemRepository extends JpaRepository<AgencyOutbou
 
     // 부품별 출고 목록 총 수량 합계
     @Query("SELECT COALESCE(SUM(o.quantity), 0) FROM AgencyOutboundItem o WHERE o.agency.id = :agencyId AND o.partId = :partId")
-    int getTotalQuantityByAgencyAndPart(@Param("agencyId") Long agencyId, @Param("partId") Long partId);
+    Long getTotalQuantityByAgencyAndPart(@Param("agencyId") Long agencyId, @Param("partId") Long partId);
 }

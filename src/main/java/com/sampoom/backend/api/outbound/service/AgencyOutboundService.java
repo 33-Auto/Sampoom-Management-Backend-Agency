@@ -41,10 +41,11 @@ public class AgencyOutboundService {
         int currentStock = stockMap.getOrDefault(part.getId(), 0);
 
         // 현재 출고 목록에 있는 해당 부품의 총 수량 계산
-        int totalOutboundQuantity = outboundRepository.getTotalQuantityByAgencyAndPart(agencyId, part.getId());
+        Long totalOutboundQuantity = outboundRepository.getTotalQuantityByAgencyAndPart(agencyId, part.getId());
+        int reserved = totalOutboundQuantity == null ? 0 : totalOutboundQuantity.intValue();
 
         // 사용 가능한 재고 = 실제 재고 - 이미 출고 목록에 담긴 수량
-        int availableStock = currentStock - totalOutboundQuantity;
+        int availableStock = currentStock - reserved;
 
         // 재고 부족 시 추가 금지
         if (availableStock < request.getQuantity()) {
@@ -88,9 +89,12 @@ public class AgencyOutboundService {
 
         // 재고 검증
         Map<Long, Integer> stockMap = stockService.getStockByAgency(agencyId);
-        int currentStock = stockMap.getOrDefault(item.getId(), 0);
+        int currentStock = stockMap.getOrDefault(item.getPartId(), 0);
 
-        if (newQuantity > currentStock) {
+        Long totalReserved = outboundRepository.getTotalQuantityByAgencyAndPart(agencyId, item.getPartId());
+        int reservedExcludingCurrent = (totalReserved == null ? 0 : totalReserved.intValue()) - item.getQuantity();
+
+        if (newQuantity + reservedExcludingCurrent  > currentStock) {
             throw new BadRequestException(ErrorStatus.STOCK_INSUFFICIENT);
         }
 
