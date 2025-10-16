@@ -6,6 +6,7 @@ import com.sampoom.backend.api.cart.dto.AgencyCartRequestDTO;
 import com.sampoom.backend.api.cart.dto.AgencyCartResponseDTO;
 import com.sampoom.backend.api.cart.entity.AgencyCartItem;
 import com.sampoom.backend.api.cart.repository.AgencyCartItemRepository;
+import com.sampoom.backend.api.cart.repository.AgencyCartQueryRepository;
 import com.sampoom.backend.api.partread.entity.Part;
 import com.sampoom.backend.api.partread.service.PartReadService;
 import com.sampoom.backend.common.exception.NotFoundException;
@@ -23,6 +24,7 @@ public class AgencyCartService {
     private final AgencyCartItemRepository agencyCartItemRepository;
     private final PartReadService partReadService;
     private final AgencyRepository agencyRepository;
+    private final AgencyCartQueryRepository agencyCartQueryRepository;
 
     // 장바구니 부품 추가
     @Transactional
@@ -58,17 +60,7 @@ public class AgencyCartService {
         Agency agency = agencyRepository.findById(agencyId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
 
-        List<AgencyCartItem> items = agencyCartItemRepository.findByAgency_Id(agencyId);
-
-        return items.stream()
-                .map(item -> AgencyCartResponseDTO.builder()
-                        .cartItemId(item.getId())
-                        .partId(item.getPart().getId())
-                        .partName(item.getPart().getName())
-                        .partCode(item.getPart().getCode())
-                        .quantity(item.getQuantity())
-                        .build())
-                .toList();
+       return agencyCartQueryRepository.findCartItemsWithNames(agencyId);
     }
 
     // 장바구니 수량 수정
