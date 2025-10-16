@@ -1,10 +1,11 @@
 package com.sampoom.backend.api.stock.service;
 
+import com.sampoom.backend.api.agency.entity.Agency;
 import com.sampoom.backend.api.agency.repository.AgencyRepository;
-import com.sampoom.backend.api.stock.dto.StockInboundRequestDTO;
-import com.sampoom.backend.api.stock.dto.StockOutboundRequestDTO;
 import com.sampoom.backend.api.stock.entity.AgencyStock;
 import com.sampoom.backend.api.stock.repository.AgencyStockRepository;
+import com.sampoom.backend.common.exception.NotFoundException;
+import com.sampoom.backend.common.response.ErrorStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class StockService {
 
     private final AgencyStockRepository agencyStockRepository;
+    private final AgencyRepository agencyRepository;
 
     // 대리점별 재고 Map (partId → quantity)
     public Map<Long, Integer> getStockByAgency(Long agencyId) {
@@ -29,22 +31,20 @@ public class StockService {
                 ));
     }
 
-//    // 입고 처리
-//    @Transactional
-//    public void inboundStock(Long agencyId, StockInboundRequestDTO stockInboundRequestDTO) {
-//        for (StockInboundRequestDTO.InboundItem item : stockInboundRequestDTO.getItems()) {
-//            agencyStockRepository.findByAgencyIdAndPartId(agencyId, item.getPartId())
-//                    .ifPresentOrElse(
-//                            stock -> stock.increaseQuantity(item.getQuantity()),
-//                            () -> agencyStockRepository.save(AgencyStock.builder()
-//                                    .agency(agency)
-//                                    .partId(item.getPartId())
-//                                    .quantity(item.getQuantity())
-//                                    .build())
-//                    );
-//        }
-//    }
-//
+    // 재고 증가 (입고 시)
+    @Transactional
+    public void increaseStock(Long agencyId, Long partId, int quantity) {
+        AgencyStock stock = agencyStockRepository.findByAgency_IdAndPartId(agencyId, partId)
+                .orElseGet(() -> {
+                    Agency agency = agencyRepository.findById(agencyId)
+                            .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
+                    return AgencyStock.create(agency, partId, 0);
+                });
+
+        stock.increaseQuantity(quantity);
+        agencyStockRepository.save(stock);
+    }
+
 //    // 출고 처리
 //    @Transactional
 //    public void outboundStock(Long agencyId, StockOutboundRequestDTO stockOutboundRequestDTO) {

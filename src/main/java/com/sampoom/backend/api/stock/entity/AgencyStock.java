@@ -1,7 +1,6 @@
 package com.sampoom.backend.api.stock.entity;
 
 import com.sampoom.backend.api.agency.entity.Agency;
-import com.sampoom.backend.api.partread.entity.Part;
 import com.sampoom.backend.common.entitiy.BaseTimeEntity;
 import com.sampoom.backend.common.exception.BadRequestException;
 import com.sampoom.backend.common.response.ErrorStatus;
@@ -16,7 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "agency_stock")
+@Table(
+        name = "agency_stock",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"agency_id", "part_id"})
+)
 public class AgencyStock extends BaseTimeEntity {
 
     @Id

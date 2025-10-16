@@ -1,6 +1,8 @@
 package com.sampoom.backend.api.order.entity;
 
 import com.sampoom.backend.common.entitiy.BaseTimeEntity;
+import com.sampoom.backend.common.exception.BadRequestException;
+import com.sampoom.backend.common.response.ErrorStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,9 +54,32 @@ public class AgencyOrder extends BaseTimeEntity {
         item.setOrder(this);
     }
 
-    public void markReceived() { this.status = OrderStatus.COMPLETED; }
+    // 공장 연결되면
+    public void markConfirmed() {
+        if (this.status != OrderStatus.PENDING) {
+            throw new BadRequestException(ErrorStatus.ORDER_STATUS_INVALID);
+        }
+        this.status = OrderStatus.CONFIRMED;
+    }
 
-    public void cancel() { this.status = OrderStatus.CANCELED; }
+    public void markReceived() {
+//        if (this.status != OrderStatus.CONFIRMED) {
+//            throw new BadRequestException(ErrorStatus.ORDER_STATUS_INVALID);
+//        }
+
+        if (this.status == OrderStatus.CANCELED || this.status == OrderStatus.COMPLETED) {
+            throw new BadRequestException(ErrorStatus.ORDER_STATUS_INVALID);
+        }
+
+        this.status = OrderStatus.COMPLETED;
+    }
+
+    public void cancel() {
+        if (this.status == OrderStatus.COMPLETED) {
+            throw new BadRequestException(ErrorStatus.ORDER_ALREADY_COMPLETED);
+        }
+        this.status = OrderStatus.CANCELED;
+    }
 
     public static AgencyOrder create(Long agencyId) {
         return AgencyOrder.builder()

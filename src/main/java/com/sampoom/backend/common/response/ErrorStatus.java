@@ -17,6 +17,7 @@ public enum ErrorStatus {
     ORDER_CANNOT_CANCEL(HttpStatus.BAD_REQUEST, "완료된 주문은 취소할 수 없습니다.", 60106),
     ORDER_ALREADY_CANCELED(HttpStatus.BAD_REQUEST, "이미 취소된 주문입니다.", 60107),
     ORDER_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "이미 완료된 주문입니다.", 60108),
+    ORDER_STATUS_INVALID(HttpStatus.BAD_REQUEST, "주문 상태가 잘못 되었습니다.", 60109),
 
     // 401 UNAUTHORIZED
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다.", 10401),
