@@ -17,6 +17,9 @@ public enum ErrorStatus {
     ORDER_CANNOT_CANCEL(HttpStatus.BAD_REQUEST, "완료된 주문은 취소할 수 없습니다.", 60106),
     ORDER_ALREADY_CANCELED(HttpStatus.BAD_REQUEST, "이미 취소된 주문입니다.", 60107),
     ORDER_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "이미 완료된 주문입니다.", 60108),
+    ORDER_STATUS_INVALID(HttpStatus.BAD_REQUEST, "주문 상태가 잘못 되었습니다.", 60109),
+    INVALID_QUANTITY(HttpStatus.BAD_REQUEST, "수량은 0보다 커야 합니다.", 60407),
+    STOCK_DUPLICATE(HttpStatus.CONFLICT, "이미 존재하는 재고 항목입니다.", 60408),
 
     // 401 UNAUTHORIZED
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다.", 10401),
@@ -30,6 +33,7 @@ public enum ErrorStatus {
     PART_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 부품을 찾을 수 없습니다.", 30403),
     CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니 항목을 찾을 수 없습니다.", 60104),
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문을 찾을 수 없습니다.", 60105),
+    OUTBOUND_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "출고 항목을 찾을 수 없습니다.", 60110),
 
     // 409 CONFLICT
     CONFLICT(HttpStatus.CONFLICT, "충돌이 발생했습니다.", 10409),

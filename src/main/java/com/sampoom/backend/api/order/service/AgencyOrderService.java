@@ -9,6 +9,7 @@ import com.sampoom.backend.api.order.dto.AgencyOrderResponseDTO;
 import com.sampoom.backend.api.order.entity.AgencyOrder;
 import com.sampoom.backend.api.order.entity.AgencyOrderItem;
 import com.sampoom.backend.api.order.entity.OrderStatus;
+import com.sampoom.backend.api.order.repository.AgencyOrderItemRepository;
 import com.sampoom.backend.api.order.repository.AgencyOrderRepository;
 import com.sampoom.backend.api.partread.entity.Category;
 import com.sampoom.backend.api.partread.entity.Part;
@@ -16,6 +17,7 @@ import com.sampoom.backend.api.partread.entity.PartGroup;
 import com.sampoom.backend.api.partread.repository.CategoryRepository;
 import com.sampoom.backend.api.partread.repository.PartGroupRepository;
 import com.sampoom.backend.api.partread.repository.PartRepository;
+import com.sampoom.backend.api.stock.service.StockService;
 import com.sampoom.backend.common.exception.BadRequestException;
 import com.sampoom.backend.common.exception.NotFoundException;
 import com.sampoom.backend.common.response.ErrorStatus;
@@ -23,8 +25,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,6 +42,8 @@ public class AgencyOrderService {
     private final PartRepository partRepository;
     private final PartGroupRepository partGroupRepository;
     private final CategoryRepository categoryRepository;
+    private final AgencyOrderItemRepository agencyOrderItemRepository;
+    private final StockService stockService;
 
     // 장바구니 → 주문 생성
     @Transactional
@@ -135,6 +137,15 @@ public class AgencyOrderService {
             throw new BadRequestException(ErrorStatus.ORDER_ALREADY_COMPLETED);
         }
 
+        // 주문 품목 조회
+        List<AgencyOrderItem> items = agencyOrderItemRepository.findByAgencyOrder_Id(orderId);
+
+        // 각 품목별 재고 증가
+        for (AgencyOrderItem item : items) {
+            stockService.increaseStock(agencyId, item.getPartId(), item.getQuantity());
+        }
+
+        // 주문 상태 변경
         order.markReceived();
     }
 
