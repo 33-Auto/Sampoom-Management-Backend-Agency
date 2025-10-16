@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,12 @@ import java.util.List;
 public class AgencyOrder extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
+    @SequenceGenerator(
+            name = "order_seq",
+            sequenceName = "agency_order_seq",
+            allocationSize = 1
+    )
     private Long id;
 
     private Long agencyId;
@@ -34,6 +41,11 @@ public class AgencyOrder extends BaseTimeEntity {
     @Builder.Default
     private List<AgencyOrderItem> items = new ArrayList<>();
 
+    @PostPersist
+    public void generateOrderNumber() {
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        this.orderNumber = "ORD-" + today + "-" + String.format("%06d", this.id);
+    }
 
     public void addItem(AgencyOrderItem item) {
         items.add(item);
@@ -44,10 +56,9 @@ public class AgencyOrder extends BaseTimeEntity {
 
     public void cancel() { this.status = OrderStatus.CANCELED; }
 
-    public static AgencyOrder create(Long agencyId, String orderNumber) {
+    public static AgencyOrder create(Long agencyId) {
         return AgencyOrder.builder()
                 .agencyId(agencyId)
-                .orderNumber(orderNumber)
                 .status(OrderStatus.PENDING)
                 .build();
     }

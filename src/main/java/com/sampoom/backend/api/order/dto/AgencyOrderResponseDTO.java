@@ -1,13 +1,11 @@
 package com.sampoom.backend.api.order.dto;
 
-import com.sampoom.backend.api.order.entity.AgencyOrder;
 import com.sampoom.backend.api.order.entity.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder

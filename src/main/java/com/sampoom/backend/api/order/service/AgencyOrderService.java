@@ -56,11 +56,8 @@ public class AgencyOrderService {
             throw new BadRequestException(ErrorStatus.CART_EMPTY);
         }
 
-        // 주문번호 생성
-        String orderNumber = generateOrderNumber();
-
         // 주문 생성
-        AgencyOrder agencyOrder = AgencyOrder.create(agencyId, orderNumber);
+        AgencyOrder agencyOrder = AgencyOrder.create(agencyId);
 
         // 장바구니 품목을 주문 품목으로 변환
         for (AgencyCartItem cartItem : cartItems) {
@@ -130,19 +127,15 @@ public class AgencyOrderService {
         AgencyOrder order = agencyOrderRepository.findByIdAndAgencyId(orderId, agencyId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.ORDER_NOT_FOUND));
 
+        if (order.getStatus() == OrderStatus.CANCELED) {
+            throw new BadRequestException(ErrorStatus.ORDER_ALREADY_CANCELED);
+        }
+
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new BadRequestException(ErrorStatus.ORDER_ALREADY_COMPLETED);
+        }
+
         order.markReceived();
-    }
-
-    // 주문번호 생성
-    private String generateOrderNumber() {
-        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        long countToday = agencyOrderRepository.countByCreatedAtBetween(
-                LocalDate.now().atStartOfDay(),
-                LocalDate.now().plusDays(1).atStartOfDay()
-        );
-
-        String sequence = String.format("%03d", countToday + 1); // 001, 002, 003 ...
-        return "ORD-" + today + "-" + sequence;
     }
 
     private Agency validateAgency(Long agencyId) {

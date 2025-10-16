@@ -1,6 +1,5 @@
 package com.sampoom.backend.api.order.dto;
 
-import com.sampoom.backend.api.order.entity.AgencyOrderItem;
 import lombok.Builder;
 import lombok.Getter;
 
