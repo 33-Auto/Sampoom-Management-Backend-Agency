@@ -18,6 +18,8 @@ public enum ErrorStatus {
     ORDER_ALREADY_CANCELED(HttpStatus.BAD_REQUEST, "이미 취소된 주문입니다.", 60107),
     ORDER_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "이미 완료된 주문입니다.", 60108),
     ORDER_STATUS_INVALID(HttpStatus.BAD_REQUEST, "주문 상태가 잘못 되었습니다.", 60109),
+    INVALID_QUANTITY(HttpStatus.BAD_REQUEST, "수량은 0보다 커야 합니다.", 60407),
+    STOCK_DUPLICATE(HttpStatus.CONFLICT, "이미 존재하는 재고 항목입니다.", 60408),
 
     // 401 UNAUTHORIZED
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다.", 10401),

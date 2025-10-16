@@ -2,6 +2,8 @@ package com.sampoom.backend.api.outbound.entity;
 
 import com.sampoom.backend.api.agency.entity.Agency;
 import com.sampoom.backend.api.partread.entity.Part;
+import com.sampoom.backend.common.exception.BadRequestException;
+import com.sampoom.backend.common.response.ErrorStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,10 +35,19 @@ public class AgencyOutboundItem {
     private int quantity;
 
     public void updateQuantity(int newQuantity) {
+        if (newQuantity <= 0) {
+            throw new BadRequestException(ErrorStatus.INVALID_QUANTITY);
+        }
+
         this.quantity = newQuantity;
     }
 
     public static AgencyOutboundItem create(Agency agency, Part part, int quantity) {
+
+        if (quantity <= 0) {
+            throw new BadRequestException(ErrorStatus.INVALID_QUANTITY);
+        }
+
         return AgencyOutboundItem.builder()
                 .agency(agency)
                 .partId(part.getId())

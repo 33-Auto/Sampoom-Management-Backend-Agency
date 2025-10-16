@@ -2,6 +2,7 @@ package com.sampoom.backend.api.outbound.controller;
 
 import com.sampoom.backend.api.outbound.dto.AgencyOutboundRequestDTO;
 import com.sampoom.backend.api.outbound.dto.AgencyOutboundResponseDTO;
+import com.sampoom.backend.api.outbound.dto.AgencyOutboundUpdateRequestDTO;
 import com.sampoom.backend.api.outbound.service.AgencyOutboundService;
 import com.sampoom.backend.common.response.ApiResponse;
 import com.sampoom.backend.common.response.SuccessStatus;
@@ -46,7 +47,7 @@ public class AgencyOutboundController {
     public ResponseEntity<ApiResponse<Void>> updateQuantity(
             @PathVariable Long agencyId,
             @PathVariable Long itemId,
-            @RequestBody @Valid AgencyOutboundRequestDTO request) {
+            @RequestBody @Valid AgencyOutboundUpdateRequestDTO request) {
         outboundService.updateQuantity(agencyId, itemId, request.getQuantity());
         return ApiResponse.success(SuccessStatus.OUTBOUND_UPDATE_SUCCESS, null);
     }

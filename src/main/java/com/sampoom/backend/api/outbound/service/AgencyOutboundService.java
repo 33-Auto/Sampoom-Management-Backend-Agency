@@ -40,8 +40,14 @@ public class AgencyOutboundService {
         Map<Long, Integer> stockMap = stockService.getStockByAgency(agencyId);
         int currentStock = stockMap.getOrDefault(part.getId(), 0);
 
+        // 현재 출고 목록에 있는 해당 부품의 총 수량 계산
+        int totalOutboundQuantity = outboundRepository.getTotalQuantityByAgencyAndPart(agencyId, part.getId());
+
+        // 사용 가능한 재고 = 실제 재고 - 이미 출고 목록에 담긴 수량
+        int availableStock = currentStock - totalOutboundQuantity;
+
         // 재고 부족 시 추가 금지
-        if (currentStock < request.getQuantity()) {
+        if (availableStock < request.getQuantity()) {
             throw new BadRequestException(ErrorStatus.STOCK_INSUFFICIENT);
         }
 
@@ -78,6 +84,14 @@ public class AgencyOutboundService {
 
         if (!item.getAgency().getId().equals(agencyId)) {
             throw new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND);
+        }
+
+        // 재고 검증
+        Map<Long, Integer> stockMap = stockService.getStockByAgency(agencyId);
+        int currentStock = stockMap.getOrDefault(item.getId(), 0);
+
+        if (newQuantity > currentStock) {
+            throw new BadRequestException(ErrorStatus.STOCK_INSUFFICIENT);
         }
 
         item.updateQuantity(newQuantity);
