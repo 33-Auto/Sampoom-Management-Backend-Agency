@@ -39,6 +39,12 @@ public enum SuccessStatus {
     ORDER_DETAIL_SUCCESS(HttpStatus.OK, "주문 상세 조회 성공"),
     ORDER_RECEIVE_SUCCESS(HttpStatus.OK, "주문이 입고 완료되었습니다."),
     ORDER_CANCEL_SUCCESS(HttpStatus.OK, "주문이 취소되었습니다."),
+
+    OUTBOUND_LIST_SUCCESS(HttpStatus.OK, "출고 목록 조회 성공"),
+    OUTBOUND_ADD_SUCCESS(HttpStatus.CREATED, "출고 항목 추가 성공"),
+    OUTBOUND_UPDATE_SUCCESS(HttpStatus.OK, "출고 항목 수정 성공"),
+    OUTBOUND_DELETE_SUCCESS(HttpStatus.OK, "출고 항목 삭제 성공"),
+    OUTBOUND_PROCESS_SUCCESS(HttpStatus.OK, "출고 처리 성공")
     ;
 
 

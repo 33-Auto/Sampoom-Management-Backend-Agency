@@ -45,12 +45,14 @@ public class StockService {
         agencyStockRepository.save(stock);
     }
 
-//    // 출고 처리
-//    @Transactional
-//    public void outboundStock(Long agencyId, StockOutboundRequestDTO stockOutboundRequestDTO) {
-//        for (StockOutboundRequestDTO.StockItem item : stockOutboundRequestDTO.getItems()) {
-//            agencyStockRepository.findByAgencyIdAndPartId(agencyId, item.getPartId())
-//                    .ifPresent(stock -> stock.decreaseQuantity(item.getQuantity()));
-//        }
-//    }
+    // 재고 감소 (출고 처리)
+    public void decreaseStock(Long agencyId, Long partId, int quantity) {
+        AgencyStock stock = agencyStockRepository.findByAgency_Id(agencyId).stream()
+                .filter(s -> s.getPartId().equals(partId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.PART_NOT_FOUND));
+
+        stock.decreaseQuantity(quantity);
+        agencyStockRepository.save(stock);
+    }
 }
