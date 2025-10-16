@@ -12,13 +12,6 @@ public class AgencyOrderItemResponseDTO {
     private String partName;  // 부품명
     private String partCode;  // 부품 코드
     private int quantity;     // 주문 수량
-
-    public static AgencyOrderItemResponseDTO fromEntity(AgencyOrderItem item) {
-        return AgencyOrderItemResponseDTO.builder()
-                .partId(item.getPartId())
-                .partName(item.getPartName())
-                .partCode(item.getPartCode())
-                .quantity(item.getQuantity())
-                .build();
-    }
+    private String categoryName;
+    private String groupName;
 }

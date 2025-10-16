@@ -15,21 +15,9 @@ public class AgencyOrderResponseDTO {
 
     private Long orderId;  // 주문 id
     private Long agencyId;
+    private String agencyName;
     private String orderNumber;
     private LocalDateTime createdAt;
     private OrderStatus status;
     private List<AgencyOrderItemResponseDTO> items;
-
-    public static AgencyOrderResponseDTO fromEntity(AgencyOrder order) {
-        return AgencyOrderResponseDTO.builder()
-                .orderId(order.getId())
-                .agencyId(order.getAgencyId())
-                .orderNumber(order.getOrderNumber())
-                .createdAt(order.getCreatedAt())
-                .status(order.getStatus())
-                .items(order.getItems().stream()
-                        .map(AgencyOrderItemResponseDTO::fromEntity)
-                        .collect(Collectors.toList()))
-                .build();
-    }
 }
