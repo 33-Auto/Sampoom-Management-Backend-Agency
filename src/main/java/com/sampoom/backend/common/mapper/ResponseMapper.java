@@ -34,6 +34,8 @@ public class ResponseMapper {
                 // 각 그룹 내의 부품 리스트 구성
                 List<PartResponseDTO> parts = groupItems.stream()
                         .map(p -> new PartResponseDTO(
+                                p.getCartItemId(),
+                                p.getOutboundId(),
                                 p.getPartId(),
                                 p.getPartCode(),
                                 p.getPartName(),

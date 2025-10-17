@@ -1,6 +1,7 @@
 package com.sampoom.backend.api.cart.controller;
 
 import com.sampoom.backend.api.cart.dto.AgencyCartRequestDTO;
+import com.sampoom.backend.api.cart.dto.AgencyCartUpdateRequestDTO;
 import com.sampoom.backend.api.cart.service.AgencyCartService;
 import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.response.ApiResponse;
@@ -49,9 +50,9 @@ public class AgencyCartController {
     public ResponseEntity<ApiResponse<Void>> updateCartItem(
             @PathVariable Long agencyId,
             @PathVariable Long cartItemId,
-            @Valid @RequestBody AgencyCartRequestDTO agencyCartRequestDTO
+            @Valid @RequestBody AgencyCartUpdateRequestDTO agencyCartUpdateRequestDTO
     ) {
-        agencyCartService.updateCartItem(agencyId, cartItemId, agencyCartRequestDTO);
+        agencyCartService.updateCartItem(agencyId, cartItemId, agencyCartUpdateRequestDTO);
         return ApiResponse.success(SuccessStatus.CART_UPDATE_SUCCESS, null);
     }
 

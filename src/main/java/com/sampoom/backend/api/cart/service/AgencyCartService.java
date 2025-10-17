@@ -4,6 +4,7 @@ import com.sampoom.backend.api.agency.entity.Agency;
 import com.sampoom.backend.api.agency.repository.AgencyRepository;
 import com.sampoom.backend.api.cart.dto.AgencyCartRequestDTO;
 import com.sampoom.backend.api.cart.dto.AgencyCartResponseDTO;
+import com.sampoom.backend.api.cart.dto.AgencyCartUpdateRequestDTO;
 import com.sampoom.backend.api.cart.entity.AgencyCartItem;
 import com.sampoom.backend.api.cart.repository.AgencyCartItemRepository;
 import com.sampoom.backend.api.cart.repository.AgencyCartQueryRepository;
@@ -73,7 +74,7 @@ public class AgencyCartService {
 
     // 장바구니 수량 수정
     @Transactional
-    public void updateCartItem(Long agencyId, Long cartItemId, AgencyCartRequestDTO dto) {
+    public void updateCartItem(Long agencyId, Long cartItemId, AgencyCartUpdateRequestDTO dto) {
         AgencyCartItem item = agencyCartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.CART_ITEM_NOT_FOUND));
 
