@@ -88,8 +88,8 @@ public class AgencyOutboundService {
 
     // 출고 수량 변경
     @Transactional
-    public void updateQuantity(Long agencyId, Long itemId, int newQuantity) {
-        AgencyOutboundItem item = outboundRepository.findById(itemId)
+    public void updateQuantity(Long agencyId, Long outboundId, int newQuantity) {
+        AgencyOutboundItem item = outboundRepository.findById(outboundId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.OUTBOUND_ITEM_NOT_FOUND));
 
         if (!item.getAgency().getId().equals(agencyId)) {
@@ -112,8 +112,8 @@ public class AgencyOutboundService {
 
     // 출고 항목 삭제
     @Transactional
-    public void deleteItem(Long agencyId, Long itemId) {
-        AgencyOutboundItem item = outboundRepository.findById(itemId)
+    public void deleteItem(Long agencyId, Long outboundId) {
+        AgencyOutboundItem item = outboundRepository.findById(outboundId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.OUTBOUND_ITEM_NOT_FOUND));
 
         if (!item.getAgency().getId().equals(agencyId)) {

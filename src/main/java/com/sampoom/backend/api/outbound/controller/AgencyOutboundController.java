@@ -43,21 +43,21 @@ public class AgencyOutboundController {
     }
 
     @Operation(summary = "출고 수량 변경")
-    @PatchMapping("/{itemId}")
+    @PatchMapping("/{outboundId}")
     public ResponseEntity<ApiResponse<Void>> updateQuantity(
             @PathVariable Long agencyId,
-            @PathVariable Long itemId,
+            @PathVariable Long outboundId,
             @RequestBody @Valid AgencyOutboundUpdateRequestDTO request) {
-        outboundService.updateQuantity(agencyId, itemId, request.getQuantity());
+        outboundService.updateQuantity(agencyId, outboundId, request.getQuantity());
         return ApiResponse.success(SuccessStatus.OUTBOUND_UPDATE_SUCCESS, null);
     }
 
     @Operation(summary = "출고 항목 삭제")
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("/{outboundId}")
     public ResponseEntity<ApiResponse<Void>> deleteItem(
             @PathVariable Long agencyId,
-            @PathVariable Long itemId) {
-        outboundService.deleteItem(agencyId, itemId);
+            @PathVariable Long outboundId) {
+        outboundService.deleteItem(agencyId, outboundId);
         return ApiResponse.success(SuccessStatus.OUTBOUND_DELETE_SUCCESS, null);
     }
 
