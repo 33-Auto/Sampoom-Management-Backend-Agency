@@ -10,8 +10,10 @@ import com.sampoom.backend.api.outbound.repository.AgencyOutboundQueryRepository
 import com.sampoom.backend.api.partread.entity.Part;
 import com.sampoom.backend.api.partread.service.PartReadService;
 import com.sampoom.backend.api.stock.service.StockService;
+import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.exception.BadRequestException;
 import com.sampoom.backend.common.exception.NotFoundException;
+import com.sampoom.backend.common.mapper.ResponseMapper;
 import com.sampoom.backend.common.response.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,8 @@ public class AgencyOutboundService {
     private final AgencyRepository agencyRepository;
     private final PartReadService partReadService;
     private final StockService stockService;
+    private final AgencyOutboundQueryRepository agencyOutboundQueryRepository;
+    private final ResponseMapper responseMapper;
 
     // 출고 목록에 부품 추가
     @Transactional
@@ -70,11 +74,16 @@ public class AgencyOutboundService {
 
     // 출고 목록 조회
     @Transactional
-    public List<AgencyOutboundResponseDTO> getOutboundItems(Long agencyId) {
+    public List<CategoryResponseDTO> getOutboundItems(Long agencyId) {
+
         agencyRepository.findById(agencyId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
 
-        return outboundQueryRepository.findOutboundItemsWithNames(agencyId);
+        // flat 데이터 조회 (읽기전용 DB, QueryDSL 그대로 유지)
+        List<AgencyOutboundResponseDTO> items = agencyOutboundQueryRepository.findOutboundItemsWithNames(agencyId);
+
+        // flat → nested 구조 변환
+        return responseMapper.toNestedStructure(items);
     }
 
     // 출고 수량 변경

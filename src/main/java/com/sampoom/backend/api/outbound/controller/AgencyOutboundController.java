@@ -1,9 +1,9 @@
 package com.sampoom.backend.api.outbound.controller;
 
 import com.sampoom.backend.api.outbound.dto.AgencyOutboundRequestDTO;
-import com.sampoom.backend.api.outbound.dto.AgencyOutboundResponseDTO;
 import com.sampoom.backend.api.outbound.dto.AgencyOutboundUpdateRequestDTO;
 import com.sampoom.backend.api.outbound.service.AgencyOutboundService;
+import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.response.ApiResponse;
 import com.sampoom.backend.common.response.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,9 +35,9 @@ public class AgencyOutboundController {
 
     @Operation(summary = "출고 목록 조회")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<AgencyOutboundResponseDTO>>> getItems(
+    public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> getItems(
             @PathVariable Long agencyId) {
-        List<AgencyOutboundResponseDTO> list = outboundService.getOutboundItems(agencyId);
+        List<CategoryResponseDTO> list = outboundService.getOutboundItems(agencyId);
 
         return ApiResponse.success(SuccessStatus.OUTBOUND_LIST_SUCCESS, list);
     }
