@@ -31,7 +31,9 @@ public class AgencyCartQueryRepository {
                         part.name,
                         part.code,
                         cart.quantity,
+                        group.id,
                         group.name,
+                        category.id,
                         category.name
                 ))
                 .from(cart)

@@ -16,4 +16,6 @@ public interface AgencyCartItemRepository extends CrudRepository<AgencyCartItem,
 
     // 대리점 ID + 부품 ID로 항목 삭제
     void deleteByAgency_IdAndPart_Id(Long agencyId, Long partId);
+
+    void deleteAllByAgencyId(Long agencyId);
 }

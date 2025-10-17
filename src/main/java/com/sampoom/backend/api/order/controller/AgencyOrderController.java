@@ -23,11 +23,11 @@ public class AgencyOrderController {
     // 주문 생성 (장바구니 → 주문으로 전환)
     @Operation(summary = "주문 생성", description = "장바구니에 담긴 품목을 기반으로 새 주문을 생성합니다.")
     @PostMapping
-    public ResponseEntity<ApiResponse<AgencyOrderResponseDTO>> createOrder(
+    public ResponseEntity<ApiResponse<List<AgencyOrderResponseDTO>>> createOrder(
             @PathVariable Long agencyId
     ) {
-        AgencyOrderResponseDTO order = agencyOrderService.createOrder(agencyId);
-        return ApiResponse.success(SuccessStatus.ORDER_CREATE_SUCCESS, order);
+       List<AgencyOrderResponseDTO> result = agencyOrderService.createOrder(agencyId);
+        return ApiResponse.success(SuccessStatus.ORDER_CREATE_SUCCESS, result);
     }
 
     // 대리점별 주문 목록 조회
@@ -43,11 +43,11 @@ public class AgencyOrderController {
     // 주문 상세 조회
     @Operation(summary = "주문 상세 조회", description = "특정 주문의 상세 정보를 조회합니다.")
     @GetMapping("/{orderId}")
-    public ResponseEntity<ApiResponse<AgencyOrderResponseDTO>> getOrderDetail(
+    public ResponseEntity<ApiResponse<List<AgencyOrderResponseDTO>>> getOrderDetail(
             @PathVariable Long agencyId,
             @PathVariable Long orderId
     ) {
-        AgencyOrderResponseDTO order = agencyOrderService.getOrderDetail(agencyId, orderId);
+        List<AgencyOrderResponseDTO> order = agencyOrderService.getOrderDetail(agencyId, orderId);
         return ApiResponse.success(SuccessStatus.ORDER_DETAIL_SUCCESS, order);
     }
 
