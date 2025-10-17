@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryResponseDTO {
+public class CategorySimpleResponseDTO {
     private Long id;
     private String code;
     private String name;
 
     // Entity → DTO 변환용 static 메서드
-    public static CategoryResponseDTO fromEntity(Category category) {
-        return CategoryResponseDTO.builder()
+    public static CategorySimpleResponseDTO fromEntity(Category category) {
+        return CategorySimpleResponseDTO.builder()
                 .id(category.getId())
                 .code(category.getCode())
                 .name(category.getName())
