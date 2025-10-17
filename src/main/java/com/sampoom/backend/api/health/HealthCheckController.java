@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "HealthCheck", description = "HealthCheck 관련 API 입니다.")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping()
 public class HealthCheckController {
 
 
@@ -53,7 +53,7 @@ public class HealthCheckController {
     @GetMapping("/health-error")
     public ResponseEntity<ApiResponse<Void>> healthCheckData(@RequestParam(required = false) Boolean fail) {
         if (Boolean.TRUE.equals(fail)) {
-            throw new BadRequestException(ErrorStatus.BAD_REQUEST.getMessage());
+            throw new BadRequestException(ErrorStatus.BAD_REQUEST);
         }
 
         return ApiResponse.success_only(SuccessStatus.OK);
@@ -64,17 +64,17 @@ public class HealthCheckController {
      */
     @GetMapping("/health-notfound")
     public ResponseEntity<ApiResponse<Void>> notFoundTest() {
-        throw new NotFoundException(ErrorStatus.NOT_FOUND.getMessage());
+        throw new NotFoundException(ErrorStatus.NOT_FOUND);
     }
 
     @GetMapping("/health-unauthorized")
     public ResponseEntity<ApiResponse<Void>> unauthorizedTest() {
-        throw new UnauthorizedException(ErrorStatus.UNAUTHORIZED.getMessage());
+        throw new UnauthorizedException(ErrorStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/health-forbidden")
     public ResponseEntity<ApiResponse<Void>> forbiddenTest() {
-        throw new ForbiddenException(ErrorStatus.FORBIDDEN.getMessage());
+        throw new ForbiddenException(ErrorStatus.FORBIDDEN);
     }
 
 
