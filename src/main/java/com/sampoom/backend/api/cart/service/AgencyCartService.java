@@ -4,12 +4,15 @@ import com.sampoom.backend.api.agency.entity.Agency;
 import com.sampoom.backend.api.agency.repository.AgencyRepository;
 import com.sampoom.backend.api.cart.dto.AgencyCartRequestDTO;
 import com.sampoom.backend.api.cart.dto.AgencyCartResponseDTO;
+import com.sampoom.backend.api.cart.dto.AgencyCartUpdateRequestDTO;
 import com.sampoom.backend.api.cart.entity.AgencyCartItem;
 import com.sampoom.backend.api.cart.repository.AgencyCartItemRepository;
 import com.sampoom.backend.api.cart.repository.AgencyCartQueryRepository;
 import com.sampoom.backend.api.partread.entity.Part;
 import com.sampoom.backend.api.partread.service.PartReadService;
+import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.exception.NotFoundException;
+import com.sampoom.backend.common.mapper.ResponseMapper;
 import com.sampoom.backend.common.response.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ public class AgencyCartService {
     private final PartReadService partReadService;
     private final AgencyRepository agencyRepository;
     private final AgencyCartQueryRepository agencyCartQueryRepository;
+    private final ResponseMapper responseMapper;
 
     // 장바구니 부품 추가
     @Transactional
@@ -55,17 +59,22 @@ public class AgencyCartService {
 
     // 장바구니 목록 조회
     @Transactional
-    public List<AgencyCartResponseDTO> getCartItems(Long agencyId) {
-        // Agency 조회
-        Agency agency = agencyRepository.findById(agencyId)
-                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
+    public List<CategoryResponseDTO> getCartItems(Long agencyId) {
 
-       return agencyCartQueryRepository.findCartItemsWithNames(agencyId);
+        if (!agencyRepository.existsById(agencyId)) {
+            throw new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND);
+        }
+
+        // flat 데이터 조회 (읽기전용 DB, QueryDSL 그대로 유지)
+        List<AgencyCartResponseDTO> items = agencyCartQueryRepository.findCartItemsWithNames(agencyId);
+
+        // flat → nested 구조 변환
+        return responseMapper.toNestedStructure(items);
     }
 
     // 장바구니 수량 수정
     @Transactional
-    public void updateCartItem(Long agencyId, Long cartItemId, AgencyCartRequestDTO dto) {
+    public void updateCartItem(Long agencyId, Long cartItemId, AgencyCartUpdateRequestDTO dto) {
         AgencyCartItem item = agencyCartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.CART_ITEM_NOT_FOUND));
 

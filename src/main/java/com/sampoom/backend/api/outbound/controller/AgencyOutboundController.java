@@ -1,9 +1,9 @@
 package com.sampoom.backend.api.outbound.controller;
 
 import com.sampoom.backend.api.outbound.dto.AgencyOutboundRequestDTO;
-import com.sampoom.backend.api.outbound.dto.AgencyOutboundResponseDTO;
 import com.sampoom.backend.api.outbound.dto.AgencyOutboundUpdateRequestDTO;
 import com.sampoom.backend.api.outbound.service.AgencyOutboundService;
+import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.response.ApiResponse;
 import com.sampoom.backend.common.response.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,29 +35,29 @@ public class AgencyOutboundController {
 
     @Operation(summary = "출고 목록 조회")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<AgencyOutboundResponseDTO>>> getItems(
+    public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> getItems(
             @PathVariable Long agencyId) {
-        List<AgencyOutboundResponseDTO> list = outboundService.getOutboundItems(agencyId);
+        List<CategoryResponseDTO> list = outboundService.getOutboundItems(agencyId);
 
         return ApiResponse.success(SuccessStatus.OUTBOUND_LIST_SUCCESS, list);
     }
 
     @Operation(summary = "출고 수량 변경")
-    @PatchMapping("/{itemId}")
+    @PatchMapping("/{outboundId}")
     public ResponseEntity<ApiResponse<Void>> updateQuantity(
             @PathVariable Long agencyId,
-            @PathVariable Long itemId,
+            @PathVariable Long outboundId,
             @RequestBody @Valid AgencyOutboundUpdateRequestDTO request) {
-        outboundService.updateQuantity(agencyId, itemId, request.getQuantity());
+        outboundService.updateQuantity(agencyId, outboundId, request.getQuantity());
         return ApiResponse.success(SuccessStatus.OUTBOUND_UPDATE_SUCCESS, null);
     }
 
     @Operation(summary = "출고 항목 삭제")
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("/{outboundId}")
     public ResponseEntity<ApiResponse<Void>> deleteItem(
             @PathVariable Long agencyId,
-            @PathVariable Long itemId) {
-        outboundService.deleteItem(agencyId, itemId);
+            @PathVariable Long outboundId) {
+        outboundService.deleteItem(agencyId, outboundId);
         return ApiResponse.success(SuccessStatus.OUTBOUND_DELETE_SUCCESS, null);
     }
 

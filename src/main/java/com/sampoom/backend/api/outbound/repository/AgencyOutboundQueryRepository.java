@@ -28,11 +28,13 @@ public class AgencyOutboundQueryRepository {
                 .select(Projections.constructor(AgencyOutboundResponseDTO.class,
                         outbound.id,
                         part.id,
-                        part.code,
                         part.name,
+                        part.code,
+                        outbound.quantity,
+                        group.id,
                         group.name,
-                        category.name,
-                        outbound.quantity
+                        category.id,
+                        category.name
                 ))
                 .from(outbound)
                 .join(part).on(outbound.partId.eq(part.id))

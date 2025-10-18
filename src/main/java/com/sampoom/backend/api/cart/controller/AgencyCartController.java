@@ -1,8 +1,9 @@
 package com.sampoom.backend.api.cart.controller;
 
 import com.sampoom.backend.api.cart.dto.AgencyCartRequestDTO;
-import com.sampoom.backend.api.cart.dto.AgencyCartResponseDTO;
+import com.sampoom.backend.api.cart.dto.AgencyCartUpdateRequestDTO;
 import com.sampoom.backend.api.cart.service.AgencyCartService;
+import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.response.ApiResponse;
 import com.sampoom.backend.common.response.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,10 +37,10 @@ public class AgencyCartController {
     // 장바구니 목록 조회
     @Operation(summary = "장바구니 목록 조회", description = "대리점의 장바구니에 담긴 부품 목록을 조회합니다.")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<AgencyCartResponseDTO>>> getCartItems(
+    public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> getCartItems(
             @PathVariable Long agencyId
     ) {
-        List<AgencyCartResponseDTO> result = agencyCartService.getCartItems(agencyId);
+        List<CategoryResponseDTO> result = agencyCartService.getCartItems(agencyId);
         return ApiResponse.success(SuccessStatus.CART_LIST_SUCCESS, result);
     }
 
@@ -49,9 +50,9 @@ public class AgencyCartController {
     public ResponseEntity<ApiResponse<Void>> updateCartItem(
             @PathVariable Long agencyId,
             @PathVariable Long cartItemId,
-            @Valid @RequestBody AgencyCartRequestDTO agencyCartRequestDTO
+            @Valid @RequestBody AgencyCartUpdateRequestDTO agencyCartUpdateRequestDTO
     ) {
-        agencyCartService.updateCartItem(agencyId, cartItemId, agencyCartRequestDTO);
+        agencyCartService.updateCartItem(agencyId, cartItemId, agencyCartUpdateRequestDTO);
         return ApiResponse.success(SuccessStatus.CART_UPDATE_SUCCESS, null);
     }
 

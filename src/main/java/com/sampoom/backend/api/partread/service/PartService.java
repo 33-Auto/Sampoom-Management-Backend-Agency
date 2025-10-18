@@ -1,12 +1,16 @@
 package com.sampoom.backend.api.partread.service;
 
 import com.sampoom.backend.api.agency.repository.AgencyRepository;
+import com.sampoom.backend.api.partread.dto.CategorySimpleResponseDTO;
+import com.sampoom.backend.api.partread.dto.PartFlatResponseDTO;
 import com.sampoom.backend.api.partread.dto.PartWithStockResponseDTO;
-import com.sampoom.backend.api.partread.dto.CategoryResponseDTO;
 import com.sampoom.backend.api.partread.dto.PartGroupResponseDTO;
 import com.sampoom.backend.api.partread.entity.Part;
+import com.sampoom.backend.api.partread.repository.PartQueryRepository;
 import com.sampoom.backend.api.stock.service.StockService;
+import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.exception.NotFoundException;
+import com.sampoom.backend.common.mapper.ResponseMapper;
 import com.sampoom.backend.common.response.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,11 +25,13 @@ public class PartService {
     private final PartReadService partReadService;
     private final StockService stockService;
     private final AgencyRepository agencyRepository;
+    private final PartQueryRepository partQueryRepository;
+    private final ResponseMapper responseMapper;
 
     // 카테고리 목록 조회
-    public List<CategoryResponseDTO> getCategories() {
+    public List<CategorySimpleResponseDTO> getCategories() {
         return partReadService.getCategories().stream()
-                .map(CategoryResponseDTO::fromEntity)
+                .map(CategorySimpleResponseDTO::fromEntity)
                 .toList();
     }
 
@@ -55,20 +61,13 @@ public class PartService {
     }
 
     // 검색 결과 + 재고 포함 (재고 없으면 0)
-    public List<PartWithStockResponseDTO> searchParts(Long agencyId, String keyword) {
+    public List<CategoryResponseDTO> searchParts(Long agencyId, String keyword) {
 
         // 대리점 존재 여부 확인
         agencyRepository.findById(agencyId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
 
-        List<Part> parts = partReadService.searchParts(keyword);
-        Map<Long, Integer> stockMap = stockService.getStockByAgency(agencyId);
-
-        return parts.stream()
-                .map(part -> PartWithStockResponseDTO.of(
-                        part,
-                        stockMap.getOrDefault(part.getId(), 0)
-                ))
-                .toList();
+        List<PartFlatResponseDTO> flatList = partQueryRepository.searchPartsWithStock(agencyId, keyword);
+        return responseMapper.toNestedStructure(flatList);
     }
 }
