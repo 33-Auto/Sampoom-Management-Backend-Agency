@@ -33,6 +33,8 @@ public class AgencyOrder extends BaseTimeEntity {
 
     private Long agencyId;
 
+    private String agencyName;
+
     @Column(name = "order_number", unique = true)
     private String orderNumber;
 
@@ -81,10 +83,11 @@ public class AgencyOrder extends BaseTimeEntity {
         this.status = OrderStatus.CANCELED;
     }
 
-    public static AgencyOrder create(Long agencyId) {
-        return AgencyOrder.builder()
-                .agencyId(agencyId)
-                .status(OrderStatus.PENDING)
-                .build();
+    public static AgencyOrder create(Long agencyId, String agencyName) {
+        AgencyOrder order = new AgencyOrder();
+        order.agencyId = agencyId;
+        order.agencyName = agencyName;
+        order.status = OrderStatus.PENDING;
+        return order;
     }
 }

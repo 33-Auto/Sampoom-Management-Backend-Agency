@@ -1,9 +1,10 @@
 package com.sampoom.backend.api.partread.controller;
 
 import com.sampoom.backend.api.partread.dto.PartWithStockResponseDTO;
-import com.sampoom.backend.api.partread.dto.CategoryResponseDTO;
+import com.sampoom.backend.api.partread.dto.CategorySimpleResponseDTO;
 import com.sampoom.backend.api.partread.dto.PartGroupResponseDTO;
 import com.sampoom.backend.api.partread.service.PartService;
+import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.response.ApiResponse;
 import com.sampoom.backend.common.response.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,8 +25,8 @@ public class PartController {
 
     @Operation(summary = "대리점 별 부품 카테고리 조회", description = "대리점 별 부품 카테고리 조회")
     @GetMapping("/category")
-    public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> getCategories() {
-        List<CategoryResponseDTO> categoryList = partService.getCategories();
+    public ResponseEntity<ApiResponse<List<CategorySimpleResponseDTO>>> getCategories() {
+        List<CategorySimpleResponseDTO> categoryList = partService.getCategories();
         return ApiResponse.success(SuccessStatus.CATEGORY_LIST_SUCCESS, categoryList);
     }
 
@@ -50,11 +51,11 @@ public class PartController {
 
     @GetMapping("/{agencyId}/search")
     @Operation(summary = "부품 검색", description = "부품 코드 또는 이름으로 검색")
-    public ResponseEntity<ApiResponse<List<PartWithStockResponseDTO>>> searchParts(
+    public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> searchParts(
             @PathVariable Long agencyId,
             @RequestParam String keyword
     ) {
-        List<PartWithStockResponseDTO> result = partService.searchParts(agencyId, keyword);
+        List<CategoryResponseDTO> result = partService.searchParts(agencyId, keyword);
         return ApiResponse.success(SuccessStatus.PART_SEARCH_SUCCESS, result);
     }
 

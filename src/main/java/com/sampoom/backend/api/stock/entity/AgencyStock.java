@@ -34,9 +34,6 @@ public class AgencyStock extends BaseTimeEntity {
 
     private int quantity;
 
-    @Version
-    private Long version;
-
     public void increaseQuantity(int quantity) {
         this.quantity += quantity;
     }
