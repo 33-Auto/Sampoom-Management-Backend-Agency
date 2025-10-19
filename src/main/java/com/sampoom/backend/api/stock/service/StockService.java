@@ -47,7 +47,7 @@ public class StockService {
             stock.increaseQuantity(quantity);
             agencyStockRepository.save(stock);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException(ErrorStatus.STOCK_DUPLICATE);
+            throw new BadRequestException(ErrorStatus.STOCK_ALREADY_EXISTS);
         }
 
     }

@@ -78,10 +78,9 @@ public class ResponseMapper {
                             .build();
                 })
                 .sorted(Comparator.comparing(
-                        (AgencyOrderResponseDTO dto) -> dto.getCreatedAt(),
-                        Comparator.nullsLast(Comparator.naturalOrder())
-                ).reversed())
-
+                        AgencyOrderResponseDTO::getCreatedAt,
+                        Comparator.nullsLast(Comparator.reverseOrder())
+                ))
 //                .sorted(Comparator.comparing(AgencyOrderResponseDTO::getCreatedAt).reversed())
                 .collect(Collectors.toList());
     }

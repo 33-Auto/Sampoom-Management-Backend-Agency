@@ -6,6 +6,7 @@ import com.sampoom.backend.api.partread.dto.PartGroupResponseDTO;
 import com.sampoom.backend.api.partread.service.PartService;
 import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.response.ApiResponse;
+import com.sampoom.backend.common.response.PageResponseDTO;
 import com.sampoom.backend.common.response.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,11 +52,13 @@ public class PartController {
 
     @GetMapping("/{agencyId}/search")
     @Operation(summary = "부품 검색", description = "부품 코드 또는 이름으로 검색")
-    public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> searchParts(
+    public ResponseEntity<ApiResponse<PageResponseDTO<CategoryResponseDTO>>> searchParts(
             @PathVariable Long agencyId,
-            @RequestParam String keyword
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
-        List<CategoryResponseDTO> result = partService.searchParts(agencyId, keyword);
+        PageResponseDTO<CategoryResponseDTO> result = partService.searchParts(agencyId, keyword, page, size);
         return ApiResponse.success(SuccessStatus.PART_SEARCH_SUCCESS, result);
     }
 

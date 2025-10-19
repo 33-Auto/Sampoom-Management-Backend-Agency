@@ -2,6 +2,8 @@ package com.sampoom.backend.api.cart.entity;
 
 import com.sampoom.backend.api.agency.entity.Agency;
 import com.sampoom.backend.api.partread.entity.Part;
+import com.sampoom.backend.common.exception.BadRequestException;
+import com.sampoom.backend.common.response.ErrorStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +32,17 @@ public class AgencyCartItem {
 
     private int quantity;
 
-    public void updateQuantity(int quantity) {
+    public void addQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new BadRequestException(ErrorStatus.INVALID_QUANTITY);
+        }
+        this.quantity += quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new BadRequestException(ErrorStatus.INVALID_QUANTITY);
+        }
         this.quantity = quantity;
     }
 }

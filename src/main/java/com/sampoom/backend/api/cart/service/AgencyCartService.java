@@ -46,7 +46,7 @@ public class AgencyCartService {
                 .orElse(null);
 
         if (existingItem != null) {
-            existingItem.updateQuantity(agencyCartRequestDTO.getQuantity());
+            existingItem.addQuantity(agencyCartRequestDTO.getQuantity());
         } else {
             AgencyCartItem newItem = AgencyCartItem.builder()
                     .agency(agency)
@@ -82,7 +82,7 @@ public class AgencyCartService {
             throw new NotFoundException(ErrorStatus.AGENCY_CART_MISMATCH);
         }
 
-        item.updateQuantity(dto.getQuantity());
+        item.setQuantity(dto.getQuantity());
     }
 
     // 장바구니 항목 삭제
