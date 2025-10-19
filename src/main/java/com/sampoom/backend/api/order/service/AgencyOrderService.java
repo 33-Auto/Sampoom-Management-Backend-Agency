@@ -120,7 +120,7 @@ public class AgencyOrderService {
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.ORDER_NOT_FOUND));
 
         if (order.getStatus() == OrderStatus.COMPLETED) {
-            throw new BadRequestException(ErrorStatus.ORDER_CANNOT_CANCEL);
+            throw new BadRequestException(ErrorStatus.ORDER_ALREADY_COMPLETED);
         }
         if (order.getStatus() == OrderStatus.CANCELED) {
             throw new BadRequestException(ErrorStatus.ORDER_ALREADY_CANCELED);
