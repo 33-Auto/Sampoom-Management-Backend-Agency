@@ -12,7 +12,11 @@ import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.exception.NotFoundException;
 import com.sampoom.backend.common.mapper.ResponseMapper;
 import com.sampoom.backend.common.response.ErrorStatus;
+import com.sampoom.backend.common.response.PageResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -61,13 +65,24 @@ public class PartService {
     }
 
     // 검색 결과 + 재고 포함 (재고 없으면 0)
-    public List<CategoryResponseDTO> searchParts(Long agencyId, String keyword) {
+    public PageResponseDTO<CategoryResponseDTO> searchParts(Long agencyId, String keyword, int page, int size) {
 
         // 대리점 존재 여부 확인
         agencyRepository.findById(agencyId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
 
-        List<PartFlatResponseDTO> flatList = partQueryRepository.searchPartsWithStock(agencyId, keyword);
-        return responseMapper.toNestedStructure(flatList);
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<PartFlatResponseDTO> flatPage = partQueryRepository.searchPartsWithStock(agencyId, keyword, pageable);
+
+        // flat → nested 변환
+        List<CategoryResponseDTO> nested = responseMapper.toNestedStructure(flatPage.getContent());
+
+        return PageResponseDTO.<CategoryResponseDTO>builder()
+                .content(nested)
+                .totalElements(flatPage.getTotalElements())
+                .totalPages(flatPage.getTotalPages())
+                .currentPage(page)
+                .build();
     }
 }

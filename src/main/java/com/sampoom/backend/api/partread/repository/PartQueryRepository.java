@@ -8,6 +8,9 @@ import com.sampoom.backend.api.partread.entity.QPartGroup;
 import com.sampoom.backend.api.partread.entity.QCategory;
 import com.sampoom.backend.api.stock.entity.QAgencyStock;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,13 +21,14 @@ public class PartQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<PartFlatResponseDTO> searchPartsWithStock(Long agencyId, String keyword) {
+    public Page<PartFlatResponseDTO> searchPartsWithStock(Long agencyId, String keyword, Pageable pageable) {
         QPart part = QPart.part;
         QPartGroup group = QPartGroup.partGroup;
         QCategory category = QCategory.category;
         QAgencyStock stock = QAgencyStock.agencyStock;
 
-        return queryFactory
+        // 실제 페이지 내용
+        List<PartFlatResponseDTO> content = queryFactory
                 .select(new QPartFlatResponseDTO(
                         category.id,
                         category.name,
@@ -33,18 +37,39 @@ public class PartQueryRepository {
                         part.id,
                         part.code,
                         part.name,
-                        stock.quantity.coalesce(0) // 재고 없으면 0
+                        stock.quantity.coalesce(0)
                 ))
                 .from(part)
                 .join(group).on(part.groupId.eq(group.id))
                 .join(category).on(group.categoryId.eq(category.id))
-                .leftJoin(stock)
-                .on(stock.partId.eq(part.id)
-                        .and(stock.agency.id.eq(agencyId))) // 대리점별 재고 조인
+                .leftJoin(stock).on(stock.partId.eq(part.id)
+                        .and(stock.agency.id.eq(agencyId)))
                 .where(
-                        part.name.containsIgnoreCase(keyword)
+                        keyword != null && !keyword.isBlank()
+                                ? part.name.containsIgnoreCase(keyword)
                                 .or(part.code.containsIgnoreCase(keyword))
+                                : null
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        // 전체 개수
+        Long total = queryFactory
+                .select(part.count())
+                .from(part)
+                .join(group).on(part.groupId.eq(group.id))
+                .join(category).on(group.categoryId.eq(category.id))
+                .leftJoin(stock).on(stock.partId.eq(part.id)
+                        .and(stock.agency.id.eq(agencyId)))
+                .where(
+                        keyword != null && !keyword.isBlank()
+                                ? part.name.containsIgnoreCase(keyword)
+                                .or(part.code.containsIgnoreCase(keyword))
+                                : null
+                )
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total == null ? 0 : total);
     }
 }
