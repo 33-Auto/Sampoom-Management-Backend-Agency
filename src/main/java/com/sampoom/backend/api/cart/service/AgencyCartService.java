@@ -42,17 +42,17 @@ public class AgencyCartService {
 
         // 기존 장바구니 항목 확인
         AgencyCartItem existingItem = agencyCartItemRepository
-                .findByAgency_IdAndPart_Id(agencyId, agencyCartRequestDTO.getPartId())
+                .findByAgency_IdAndPartId(agencyId, agencyCartRequestDTO.getPartId())
                 .orElse(null);
 
         if (existingItem != null) {
             existingItem.addQuantity(agencyCartRequestDTO.getQuantity());
         } else {
-            AgencyCartItem newItem = AgencyCartItem.builder()
-                    .agency(agency)
-                    .part(part)
-                    .quantity(agencyCartRequestDTO.getQuantity())
-                    .build();
+            AgencyCartItem newItem = AgencyCartItem.create(
+                    agency,
+                    part,
+                    agencyCartRequestDTO.getQuantity()
+            );
             agencyCartItemRepository.save(newItem);
         }
     }

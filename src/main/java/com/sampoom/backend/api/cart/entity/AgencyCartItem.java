@@ -26,9 +26,11 @@ public class AgencyCartItem {
     @JoinColumn(name = "agency_id")
     private Agency agency;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "part_id")
-    private Part part;
+    private Long partId;
+
+    private String partName;
+
+    private String partCode;
 
     private int quantity;
 
@@ -44,5 +46,15 @@ public class AgencyCartItem {
             throw new BadRequestException(ErrorStatus.INVALID_QUANTITY);
         }
         this.quantity = quantity;
+    }
+
+    public static AgencyCartItem create(Agency agency, Part part, int quantity) {
+        return AgencyCartItem.builder()
+                .agency(agency)
+                .partId(part.getId())
+                .partName(part.getName())
+                .partCode(part.getCode())
+                .quantity(quantity)
+                .build();
     }
 }
