@@ -22,6 +22,9 @@ public enum SuccessStatus {
     // 대리점 관련
     AGENCY_LIST_SUCCESS(HttpStatus.OK, "대리점 목록 조회 성공"),
     AGENCY_DETAIL_SUCCESS(HttpStatus.OK, "대리점 상세 조회 성공"),
+    AGENCY_CREATE_SUCCESS(HttpStatus.CREATED, "대리점 생성 및 Outbox 이벤트 저장 완료"),
+    AGENCY_UPDATE_SUCCESS(HttpStatus.OK, "대리점 정보 수정 및 Outbox 이벤트 저장 완료"),
+    AGENCY_DELETE_SUCCESS(HttpStatus.OK, "대리점 삭제 및 Outbox 이벤트 저장 완료"),
 
     CART_ADD_SUCCESS(HttpStatus.OK,  "장바구니 담기 성공"),
     CART_LIST_SUCCESS(HttpStatus.OK, "장바구니 목록 조회 성공"),

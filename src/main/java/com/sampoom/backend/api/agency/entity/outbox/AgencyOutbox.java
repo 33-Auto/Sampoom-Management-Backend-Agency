@@ -1,0 +1,48 @@
+package com.sampoom.backend.api.agency.entity.outbox;
+
+import com.sampoom.backend.common.entity.BaseTimeEntity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "agency_outbox")
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AgencyOutbox extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String aggregateType;   // 예: "Agency"
+    private Long aggregateId;       // 예: agencyId
+    private String eventType;       // 예: "AgencyUpdatedEvent"
+
+    @Column(columnDefinition = "TEXT")
+    private String payload;         // JSON 데이터
+
+    @Enumerated(EnumType.STRING)
+    private OutboxStatus status;    // READY / PUBLISHED / FAILED
+
+    private int retryCount;
+
+    private LocalDateTime publishedAt;
+
+    // 상태 변경용 유틸
+    public void markPublished() {
+        this.status = OutboxStatus.PUBLISHED;
+        this.publishedAt = LocalDateTime.now();
+    }
+
+    public void markFailed() {
+        this.status = OutboxStatus.FAILED;
+        this.retryCount += 1;
+    }
+}
