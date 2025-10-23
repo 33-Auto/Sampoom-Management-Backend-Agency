@@ -1,7 +1,7 @@
 package com.sampoom.backend.api.stock.entity;
 
 import com.sampoom.backend.api.agency.entity.Agency;
-import com.sampoom.backend.common.entitiy.BaseTimeEntity;
+import com.sampoom.backend.common.entity.BaseTimeEntity;
 import com.sampoom.backend.common.exception.BadRequestException;
 import com.sampoom.backend.common.response.ErrorStatus;
 import jakarta.persistence.*;

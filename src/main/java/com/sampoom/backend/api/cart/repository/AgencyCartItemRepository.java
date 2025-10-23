@@ -12,10 +12,10 @@ public interface AgencyCartItemRepository extends CrudRepository<AgencyCartItem,
     List<AgencyCartItem> findByAgency_Id(Long agencyId);
 
     // 대리점 ID + 부품 ID로 단일 항목 조회
-    Optional<AgencyCartItem> findByAgency_IdAndPart_Id(Long agencyId, Long partId);
+    Optional<AgencyCartItem> findByAgency_IdAndPartId(Long agencyId, Long partId);
 
     // 대리점 ID + 부품 ID로 항목 삭제
-    void deleteByAgency_IdAndPart_Id(Long agencyId, Long partId);
+    void deleteByAgency_IdAndPartId(Long agencyId, Long partId);
 
     void deleteAllByAgencyId(Long agencyId);
 }
