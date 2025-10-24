@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "agency_outbox")
@@ -34,6 +35,16 @@ public class AgencyOutbox extends BaseTimeEntity {
     private int retryCount;
 
     private LocalDateTime publishedAt;
+
+    @Column(nullable = false, updatable = false, unique = true)
+    private String eventId;         // 이벤트 고유 ID (UUID)
+
+    @Column(nullable = false)
+    private Long version;           // Agency 엔티티의 버전
+
+    @Column(nullable = false)
+    private OffsetDateTime occurredAt; // 이벤트 발생 시간 (ISO-8601)
+
 
     // 상태 변경용 유틸
     public void markPublished() {
