@@ -1,6 +1,6 @@
-package com.sampoom.backend.api.partread.dto;
+package com.sampoom.backend.api.part.dto;
 
-import com.sampoom.backend.api.partread.entity.PartGroup;
+import com.sampoom.backend.api.part.entity.PartGroup;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

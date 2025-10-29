@@ -1,11 +1,11 @@
-package com.sampoom.backend.api.partread.service;
+package com.sampoom.backend.api.part.service;
 
-import com.sampoom.backend.api.partread.entity.Category;
-import com.sampoom.backend.api.partread.entity.Part;
-import com.sampoom.backend.api.partread.entity.PartGroup;
-import com.sampoom.backend.api.partread.repository.CategoryRepository;
-import com.sampoom.backend.api.partread.repository.PartGroupRepository;
-import com.sampoom.backend.api.partread.repository.PartRepository;
+import com.sampoom.backend.api.part.entity.Category;
+import com.sampoom.backend.api.part.entity.Part;
+import com.sampoom.backend.api.part.entity.PartGroup;
+import com.sampoom.backend.api.part.repository.CategoryRepository;
+import com.sampoom.backend.api.part.repository.PartGroupRepository;
+import com.sampoom.backend.api.part.repository.PartRepository;
 import com.sampoom.backend.common.exception.NotFoundException;
 import com.sampoom.backend.common.response.ErrorStatus;
 import lombok.RequiredArgsConstructor;

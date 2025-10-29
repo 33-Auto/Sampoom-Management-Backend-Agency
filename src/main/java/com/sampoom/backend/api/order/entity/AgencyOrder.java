@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "agency_order")
@@ -45,10 +46,22 @@ public class AgencyOrder extends BaseTimeEntity {
     @Builder.Default
     private List<AgencyOrderItem> items = new ArrayList<>();
 
-    @PostPersist
-    public void generateOrderNumber() {
-        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        this.orderNumber = "ORD-" + today + "-" + String.format("%06d", this.id);
+//    @PostPersist
+//    public void generateOrderNumber() {
+//        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+//        this.orderNumber = "ORD-" + today + "-" + String.format("%06d", this.id);
+//    }
+
+    @PrePersist
+    public void setInitialValues() {
+        if (this.orderNumber == null) {
+            String uuidPart = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+            String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            this.orderNumber = "ORD-" + today + "-" + uuidPart;
+        }
+        if (this.status == null) {
+            this.status = OrderStatus.PENDING;
+        }
     }
 
     public void addItem(AgencyOrderItem item) {
@@ -56,7 +69,7 @@ public class AgencyOrder extends BaseTimeEntity {
         item.setOrder(this);
     }
 
-    // 공장 연결되면
+    // 창고 연결되면
     public void markConfirmed() {
         if (this.status != OrderStatus.PENDING) {
             throw new BadRequestException(ErrorStatus.ORDER_STATUS_INVALID);

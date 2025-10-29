@@ -1,11 +1,11 @@
-package com.sampoom.backend.api.partread.repository;
+package com.sampoom.backend.api.part.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sampoom.backend.api.partread.dto.PartFlatResponseDTO;
-import com.sampoom.backend.api.partread.dto.QPartFlatResponseDTO;
-import com.sampoom.backend.api.partread.entity.QPart;
-import com.sampoom.backend.api.partread.entity.QPartGroup;
-import com.sampoom.backend.api.partread.entity.QCategory;
+import com.sampoom.backend.api.part.dto.PartFlatResponseDTO;
+import com.sampoom.backend.api.part.dto.QPartFlatResponseDTO;
+import com.sampoom.backend.api.part.entity.QPart;
+import com.sampoom.backend.api.part.entity.QPartGroup;
+import com.sampoom.backend.api.part.entity.QCategory;
 import com.sampoom.backend.api.stock.entity.QAgencyStock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
