@@ -1,4 +1,4 @@
-package com.sampoom.backend.api.partread.entity;
+package com.sampoom.backend.api.part.entity;
 
 import com.sampoom.backend.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;

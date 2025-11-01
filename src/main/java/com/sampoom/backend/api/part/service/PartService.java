@@ -1,12 +1,12 @@
-package com.sampoom.backend.api.partread.service;
+package com.sampoom.backend.api.part.service;
 
 import com.sampoom.backend.api.agency.repository.AgencyRepository;
-import com.sampoom.backend.api.partread.dto.CategorySimpleResponseDTO;
-import com.sampoom.backend.api.partread.dto.PartFlatResponseDTO;
-import com.sampoom.backend.api.partread.dto.PartWithStockResponseDTO;
-import com.sampoom.backend.api.partread.dto.PartGroupResponseDTO;
-import com.sampoom.backend.api.partread.entity.Part;
-import com.sampoom.backend.api.partread.repository.PartQueryRepository;
+import com.sampoom.backend.api.part.dto.CategorySimpleResponseDTO;
+import com.sampoom.backend.api.part.dto.PartFlatResponseDTO;
+import com.sampoom.backend.api.part.dto.PartWithStockResponseDTO;
+import com.sampoom.backend.api.part.dto.PartGroupResponseDTO;
+import com.sampoom.backend.api.part.entity.Part;
+import com.sampoom.backend.api.part.repository.PartQueryRepository;
 import com.sampoom.backend.api.stock.service.StockService;
 import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.exception.NotFoundException;

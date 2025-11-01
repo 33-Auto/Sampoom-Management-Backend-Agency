@@ -1,4 +1,4 @@
-package com.sampoom.backend.api.partread.dto;
+package com.sampoom.backend.api.part.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.sampoom.backend.common.mapper.PartFlatDTO;

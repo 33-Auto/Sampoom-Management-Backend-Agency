@@ -4,9 +4,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sampoom.backend.api.cart.dto.AgencyCartResponseDTO;
 import com.sampoom.backend.api.cart.dto.QAgencyCartResponseDTO;
 import com.sampoom.backend.api.cart.entity.QAgencyCartItem;
-import com.sampoom.backend.api.partread.entity.QCategory;
-import com.sampoom.backend.api.partread.entity.QPart;
-import com.sampoom.backend.api.partread.entity.QPartGroup;
+import com.sampoom.backend.api.part.entity.QCategory;
+import com.sampoom.backend.api.part.entity.QPart;
+import com.sampoom.backend.api.part.entity.QPartGroup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

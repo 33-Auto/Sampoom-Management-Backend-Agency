@@ -5,9 +5,9 @@ import com.sampoom.backend.api.order.dto.AgencyOrderFlatResponseDTO;
 import com.sampoom.backend.api.order.dto.QAgencyOrderFlatResponseDTO;
 import com.sampoom.backend.api.order.entity.QAgencyOrder;
 import com.sampoom.backend.api.order.entity.QAgencyOrderItem;
-import com.sampoom.backend.api.partread.entity.QPart;
-import com.sampoom.backend.api.partread.entity.QPartGroup;
-import com.sampoom.backend.api.partread.entity.QCategory;
+import com.sampoom.backend.api.part.entity.QPart;
+import com.sampoom.backend.api.part.entity.QPartGroup;
+import com.sampoom.backend.api.part.entity.QCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

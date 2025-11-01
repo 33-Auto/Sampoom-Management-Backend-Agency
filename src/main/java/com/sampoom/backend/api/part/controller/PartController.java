@@ -1,9 +1,9 @@
-package com.sampoom.backend.api.partread.controller;
+package com.sampoom.backend.api.part.controller;
 
-import com.sampoom.backend.api.partread.dto.PartWithStockResponseDTO;
-import com.sampoom.backend.api.partread.dto.CategorySimpleResponseDTO;
-import com.sampoom.backend.api.partread.dto.PartGroupResponseDTO;
-import com.sampoom.backend.api.partread.service.PartService;
+import com.sampoom.backend.api.part.dto.PartWithStockResponseDTO;
+import com.sampoom.backend.api.part.dto.CategorySimpleResponseDTO;
+import com.sampoom.backend.api.part.dto.PartGroupResponseDTO;
+import com.sampoom.backend.api.part.service.PartService;
 import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.response.ApiResponse;
 import com.sampoom.backend.common.response.PageResponseDTO;

@@ -1,4 +1,4 @@
-package com.sampoom.backend.api.partread.entity;
+package com.sampoom.backend.api.part.entity;
 
 public enum PartStatus {
     ACTIVE,

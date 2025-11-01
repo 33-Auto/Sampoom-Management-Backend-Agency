@@ -1,7 +1,7 @@
 package com.sampoom.backend.api.cart.entity;
 
 import com.sampoom.backend.api.agency.entity.Agency;
-import com.sampoom.backend.api.partread.entity.Part;
+import com.sampoom.backend.api.part.entity.Part;
 import com.sampoom.backend.common.exception.BadRequestException;
 import com.sampoom.backend.common.response.ErrorStatus;
 import jakarta.persistence.*;
