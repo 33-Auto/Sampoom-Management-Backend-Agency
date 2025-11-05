@@ -34,7 +34,8 @@ public class AgencyOutboundQueryRepository {
                         group.id,
                         group.name,
                         category.id,
-                        category.name
+                        category.name,
+                        part.standardCost
                 ))
                 .from(outbound)
                 .join(part).on(outbound.partId.eq(part.id))
