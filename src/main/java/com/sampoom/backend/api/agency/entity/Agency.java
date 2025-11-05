@@ -1,41 +1,67 @@
 package com.sampoom.backend.api.agency.entity;
 
-import com.sampoom.backend.common.entity.SoftDeleteEntity;
+import com.sampoom.backend.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 @Entity
+@Table(name = "agency")
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Table(name = "agency")
-@SQLDelete(sql = "UPDATE agency SET deleted = true, status = 'INACTIVE', deleted_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND version = ?")
-@SQLRestriction("deleted = false")
-public class Agency extends SoftDeleteEntity {
+public class Agency extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String address;
+    @Column(unique = true, nullable = false)
+    private String code;
 
+    @Column(unique = true, nullable = false)
+    private String name;         // 대리점명
+
+    @Column(unique = true, nullable = false)
+    private String address;      // 주소
+
+    private Double latitude;
+    private Double longitude;
+
+    private String businessNumber;
+    private String ceoName;
+
+    @Column(nullable = false)
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private AgencyStatus status; // 상태 (ACTIVE, INACTIVE 등)
+    private AgencyStatus status = AgencyStatus.ACTIVE;
 
-    /**
-     * 대리점 정보 수정 (이름, 주소, 상태)
-     */
-    public void updateAgency(String name, String address, AgencyStatus status) {
-        if (name != null) this.name = name;
-        if (address != null) this.address = address;
-        if (status != null) this.status = status;
+    @Column(name = "is_deleted")
+    @Builder.Default
+    private boolean deleted = false;
+
+    /** vendor 이벤트로부터 agency 정보 업데이트 */
+    public void updateFromVendorEvent(
+            String code,
+            String name,
+            String address,
+            Double latitude,
+            Double longitude,
+            AgencyStatus status,
+            String businessNumber,
+            String ceoName,
+            boolean deleted
+    ) {
+        this.code = code;
+        this.name = name;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.status = status;
+        this.businessNumber = businessNumber;
+        this.ceoName = ceoName;
+        this.deleted = deleted;
     }
 }

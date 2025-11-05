@@ -17,6 +17,7 @@ public class AgencyCartResponseDTO implements PartFlatDTO {
     private String groupName;
     private Long categoryId;
     private String categoryName;
+    private Integer standardCost; // 표준 단가
 
     @QueryProjection
     public AgencyCartResponseDTO(
@@ -28,7 +29,8 @@ public class AgencyCartResponseDTO implements PartFlatDTO {
             Long groupId,
             String groupName,
             Long categoryId,
-            String categoryName
+            String categoryName,
+            Integer standardCost
     ) {
         this.cartItemId = cartItemId;
         this.partId = partId;
@@ -39,6 +41,7 @@ public class AgencyCartResponseDTO implements PartFlatDTO {
         this.groupName = groupName;
         this.categoryId = categoryId;
         this.categoryName = categoryName;
+        this.standardCost = standardCost;
     }
 
     // PartFlatDTO getter 구현 (Mapper용)
@@ -50,4 +53,5 @@ public class AgencyCartResponseDTO implements PartFlatDTO {
     @Override public String getPartCode() { return partCode; }
     @Override public String getPartName() { return partName; }
     @Override public int getQuantity() { return quantity; }
+    @Override public Integer getStandardCost() { return standardCost; } // 실제 가격 정보 반환
 }

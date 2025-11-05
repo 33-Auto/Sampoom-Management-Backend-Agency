@@ -1,7 +1,7 @@
 package com.sampoom.backend.common.mapper;
 
-import com.sampoom.backend.api.order.dto.AgencyOrderFlatResponseDTO;
-import com.sampoom.backend.api.order.dto.AgencyOrderResponseDTO;
+//import com.sampoom.backend.api.order.dto.AgencyOrderFlatResponseDTO;
+//import com.sampoom.backend.api.order.dto.AgencyOrderResponseDTO;
 import com.sampoom.backend.common.dto.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +39,8 @@ public class ResponseMapper {
                                 p.getPartId(),
                                 p.getPartCode(),
                                 p.getPartName(),
-                                p.getQuantity()
+                                p.getQuantity(),
+                                p.getStandardCost()
                         ))
                         .toList();
 
@@ -60,28 +61,28 @@ public class ResponseMapper {
         return categories;
     }
 
-    // 주문 전용 mapper
-    public List<AgencyOrderResponseDTO> toNestedOrderStructure(List<AgencyOrderFlatResponseDTO> flatList) {
-        Map<Long, List<AgencyOrderFlatResponseDTO>> groupedByOrder = flatList.stream()
-                .collect(Collectors.groupingBy(AgencyOrderFlatResponseDTO::getOrderId));
-
-        return groupedByOrder.entrySet().stream()
-                .map(entry -> {
-                    AgencyOrderFlatResponseDTO first = entry.getValue().get(0);
-                    return AgencyOrderResponseDTO.builder()
-                            .orderId(first.getOrderId())
-                            .orderNumber(first.getOrderNumber())
-                            .createdAt(first.getCreatedAt())
-                            .status(first.getStatus())
-                            .agencyName(first.getAgencyName())
-                            .items(toNestedStructure(entry.getValue()))
-                            .build();
-                })
-                .sorted(Comparator.comparing(
-                        AgencyOrderResponseDTO::getCreatedAt,
-                        Comparator.nullsLast(Comparator.reverseOrder())
-                ))
-//                .sorted(Comparator.comparing(AgencyOrderResponseDTO::getCreatedAt).reversed())
-                .collect(Collectors.toList());
-    }
+//    // 주문 전용 mapper
+//    public List<AgencyOrderResponseDTO> toNestedOrderStructure(List<AgencyOrderFlatResponseDTO> flatList) {
+//        Map<Long, List<AgencyOrderFlatResponseDTO>> groupedByOrder = flatList.stream()
+//                .collect(Collectors.groupingBy(AgencyOrderFlatResponseDTO::getOrderId));
+//
+//        return groupedByOrder.entrySet().stream()
+//                .map(entry -> {
+//                    AgencyOrderFlatResponseDTO first = entry.getValue().get(0);
+//                    return AgencyOrderResponseDTO.builder()
+//                            .orderId(first.getOrderId())
+//                            .orderNumber(first.getOrderNumber())
+//                            .createdAt(first.getCreatedAt())
+//                            .status(first.getStatus())
+//                            .agencyName(first.getAgencyName())
+//                            .items(toNestedStructure(entry.getValue()))
+//                            .build();
+//                })
+//                .sorted(Comparator.comparing(
+//                        AgencyOrderResponseDTO::getCreatedAt,
+//                        Comparator.nullsLast(Comparator.reverseOrder())
+//                ))
+////                .sorted(Comparator.comparing(AgencyOrderResponseDTO::getCreatedAt).reversed())
+//                .collect(Collectors.toList());
+//    }
 }

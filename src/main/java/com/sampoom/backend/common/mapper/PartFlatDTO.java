@@ -11,4 +11,5 @@ public interface PartFlatDTO {
     String getPartCode();
     String getPartName();
     int getQuantity();
+    Integer getStandardCost(); // 표준 단가
 }

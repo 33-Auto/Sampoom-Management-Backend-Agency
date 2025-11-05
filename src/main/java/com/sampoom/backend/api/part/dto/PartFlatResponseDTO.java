@@ -17,6 +17,7 @@ public class PartFlatResponseDTO implements PartFlatDTO {
     private String partCode;
     private String partName;
     private int stockQuantity;
+    private Integer standardCost; // 표준 단가
 
     @QueryProjection
     public PartFlatResponseDTO(
@@ -27,7 +28,8 @@ public class PartFlatResponseDTO implements PartFlatDTO {
             Long partId,
             String partCode,
             String partName,
-            int stockQuantity
+            int stockQuantity,
+            Integer standardCost
     ) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
@@ -37,6 +39,7 @@ public class PartFlatResponseDTO implements PartFlatDTO {
         this.partCode = partCode;
         this.partName = partName;
         this.stockQuantity = stockQuantity;
+        this.standardCost = standardCost;
     }
 
     // 인터페이스용 getter
@@ -48,4 +51,5 @@ public class PartFlatResponseDTO implements PartFlatDTO {
     @Override public String getPartCode() { return partCode; }
     @Override public String getPartName() { return partName; }
     @Override public int getQuantity() { return stockQuantity; }
+    @Override public Integer getStandardCost() { return standardCost; }
 }

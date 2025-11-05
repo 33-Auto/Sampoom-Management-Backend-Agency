@@ -11,5 +11,7 @@ public interface PartGroupRepository extends JpaRepository<PartGroup, Long> {
     List<PartGroup> findByCategoryId(Long categoryId);
 
     Optional<PartGroup> findByCodeAndCategoryId(String code, Long categoryId);
+
+    boolean existsByCode(String code);
 }
 

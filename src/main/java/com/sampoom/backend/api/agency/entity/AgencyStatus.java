@@ -1,6 +1,9 @@
 package com.sampoom.backend.api.agency.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum AgencyStatus {
-    ACTIVE,    // 활성
-    INACTIVE   // 비활성
+    ACTIVE,
+    INACTIVE
 }

@@ -34,7 +34,8 @@ public class AgencyCartQueryRepository {
                         group.id,
                         group.name,
                         category.id,
-                        category.name
+                        category.name,
+                        part.standardCost
                 ))
                 .from(cart)
                 .join(part).on(cart.partId.eq(part.id))
