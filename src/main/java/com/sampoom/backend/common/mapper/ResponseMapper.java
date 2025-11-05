@@ -39,7 +39,8 @@ public class ResponseMapper {
                                 p.getPartId(),
                                 p.getPartCode(),
                                 p.getPartName(),
-                                p.getQuantity()
+                                p.getQuantity(),
+                                p.getStandardCost()
                         ))
                         .toList();
 

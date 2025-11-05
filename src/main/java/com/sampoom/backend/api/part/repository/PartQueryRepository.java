@@ -37,7 +37,8 @@ public class PartQueryRepository {
                         part.id,
                         part.code,
                         part.name,
-                        stock.quantity.coalesce(0)
+                        stock.quantity.coalesce(0),
+                        part.standardCost
                 ))
                 .from(part)
                 .join(group).on(part.groupId.eq(group.id))

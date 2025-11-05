@@ -18,4 +18,5 @@ public class PartResponseDTO {
     private String code;
     private String name;
     private int quantity;
+    private Integer standardCost; // 표준 단가
 }

@@ -15,6 +15,7 @@ public class PartWithStockResponseDTO {
     private String code;
     private String name;
     private int quantity; // 재고 수량
+    private Integer standardCost; // 표준 단가
 
     public static PartWithStockResponseDTO of(Part part, int quantity) {
         return PartWithStockResponseDTO.builder()
@@ -22,6 +23,7 @@ public class PartWithStockResponseDTO {
                 .code(part.getCode())
                 .name(part.getName())
                 .quantity(quantity)
+                .standardCost(part.getStandardCost())
                 .build();
     }
 }

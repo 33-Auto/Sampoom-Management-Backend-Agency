@@ -50,4 +50,5 @@ public class AgencyOutboundResponseDTO implements PartFlatDTO {
     @Override public String getPartCode() { return partCode; }
     @Override public String getPartName() { return partName; }
     @Override public int getQuantity() { return quantity; }
+    @Override public Integer getStandardCost() { return null; } // 출고에서는 가격 정보 불필요
 }
