@@ -3,7 +3,7 @@ package com.sampoom.backend.api.vendor.event;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sampoom.backend.api.vendor.dto.VendorPayload;
-import com.sampoom.backend.api.vendor.service.VendorService;
+import com.sampoom.backend.api.agency.service.AgencyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,12 +17,14 @@ public class VendorEventConsumer {
 
     private final ObjectMapper objectMapper;
     private final EventPayloadMapper eventPayloadMapper;
-    private final VendorService vendorService;
+    private final AgencyService agencyService;
 
     @Transactional
     @KafkaListener(topics = {"vendor-events"})
     public void consume(String message) {
         try {
+            log.info("📥 Received vendor event: {}", message);
+
             JsonNode root = objectMapper.readTree(message);
             String eventType = root.get("eventType").asText();
 
@@ -30,16 +32,20 @@ public class VendorEventConsumer {
             JsonNode payloadNode = root.get("payload");
             VendorPayload payload = objectMapper.treeToValue(payloadNode, VendorPayload.class);
 
+            log.info("🔍 Parsed payload: {}", payload);
+
             switch (eventType) {
                 case "VendorCreated":
                 case "VendorUpdated":
-                    vendorService.createOrUpdateVendor(payload);
-                    log.info("✅ Vendor saved/updated: {}", payload.getVendorName());
+                    agencyService.createOrUpdateAgencyFromVendorEvent(payload);
+                    log.info("✅ Agency saved/updated from vendor event - ID: {}, Name: {}, Code: {}",
+                            payload.getVendorId(), payload.getVendorName(), payload.getVendorCode());
                     break;
 
                 case "VendorDeleted":
-                    vendorService.deleteVendor(payload.getVendorId());
-                    log.info("🗑 Vendor deleted: {}", payload.getVendorName());
+                    agencyService.deleteAgency(payload.getVendorId());
+                    log.info("🗑 Agency deleted from vendor event - ID: {}, Name: {}",
+                            payload.getVendorId(), payload.getVendorName());
                     break;
 
                 default:
@@ -47,7 +53,7 @@ public class VendorEventConsumer {
             }
 
         } catch (Exception e) {
-            log.error("❌ Failed to process vendor event", e);
+            log.error("❌ Failed to process vendor event: {}", message, e);
             throw new RuntimeException("Kafka message processing failed", e);
         }
     }

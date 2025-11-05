@@ -1,7 +1,7 @@
 package com.sampoom.backend.api.vendor.repository;
 
-import com.sampoom.backend.api.vendor.entity.Vendor;
+import com.sampoom.backend.api.agency.entity.Agency;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface VendorRepository extends JpaRepository<Vendor, Long> {
+public interface VendorRepository extends JpaRepository<Agency, Long> {
 }

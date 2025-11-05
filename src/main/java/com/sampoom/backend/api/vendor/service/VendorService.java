@@ -1,8 +1,8 @@
 package com.sampoom.backend.api.vendor.service;
 
 import com.sampoom.backend.api.vendor.dto.VendorPayload;
-import com.sampoom.backend.api.vendor.entity.Vendor;
-import com.sampoom.backend.api.vendor.entity.VendorStatus;
+import com.sampoom.backend.api.agency.entity.Agency;
+import com.sampoom.backend.api.agency.entity.AgencyStatus;
 import com.sampoom.backend.api.vendor.repository.VendorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,24 +17,25 @@ public class VendorService {
     @Transactional
     public void createOrUpdateVendor(VendorPayload payload) {
 
-        Vendor vendor = vendorRepository.findById(payload.getVendorId())
-                .orElse(Vendor.builder()
+        Agency agency = vendorRepository.findById(payload.getVendorId())
+                .orElse(Agency.builder()
                         .id(payload.getVendorId())
                         .code(payload.getVendorCode())
                         .build());
 
-        vendor.updateFromPayload(
+        agency.updateFromVendorEvent(
+                payload.getVendorCode(),
                 payload.getVendorName(),
                 payload.getAddress(),
                 payload.getLatitude(),
                 payload.getLongitude(),
-                VendorStatus.valueOf(payload.getStatus()),
+                AgencyStatus.valueOf(payload.getStatus()),
                 payload.getBusinessNumber(),
                 payload.getCeoName(),
                 payload.isDeleted()
         );
 
-        vendorRepository.saveAndFlush(vendor); // DB 반영
+        vendorRepository.saveAndFlush(agency); // DB 반영
     }
 
     @Transactional
