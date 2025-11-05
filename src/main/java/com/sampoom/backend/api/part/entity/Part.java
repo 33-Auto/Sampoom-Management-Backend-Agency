@@ -39,7 +39,7 @@ public class Part extends BaseTimeEntity {
     @Column(name = "group_id", nullable = false)
     private Long groupId;
 
-    @Column(name = "category_id", nullable = true)
+    @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
     public void updateFromPayload(PartPayload payload) {
