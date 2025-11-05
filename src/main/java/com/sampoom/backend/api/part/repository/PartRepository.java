@@ -18,4 +18,6 @@ public interface PartRepository extends JpaRepository<Part, Long> {
             "WHERE (p.code LIKE %:keyword% OR p.name LIKE %:keyword%) " +
             "AND p.status = 'ACTIVE'")
     List<Part> searchByKeyword(@Param("keyword") String keyword);
+
+    boolean existsByCode(String code);
 }
