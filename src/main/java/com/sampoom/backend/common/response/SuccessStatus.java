@@ -26,6 +26,9 @@ public enum SuccessStatus {
     AGENCY_UPDATE_SUCCESS(HttpStatus.OK, "대리점 정보 수정 및 Outbox 이벤트 저장 완료"),
     AGENCY_DELETE_SUCCESS(HttpStatus.OK, "대리점 삭제 및 Outbox 이벤트 저장 완료"),
 
+    // 대시보드 관련
+    DASHBOARD_SUCCESS(HttpStatus.OK, "대시보드 조회 성공"),
+
     CART_ADD_SUCCESS(HttpStatus.OK,  "장바구니 담기 성공"),
     CART_LIST_SUCCESS(HttpStatus.OK, "장바구니 목록 조회 성공"),
     CART_UPDATE_SUCCESS(HttpStatus.OK, "장바구니 수량 수정 성공"),

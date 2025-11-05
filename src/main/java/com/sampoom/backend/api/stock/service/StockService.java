@@ -2,9 +2,11 @@ package com.sampoom.backend.api.stock.service;
 
 import com.sampoom.backend.api.agency.entity.Agency;
 import com.sampoom.backend.api.agency.repository.AgencyRepository;
+import com.sampoom.backend.api.stock.dto.DashboardResponseDTO;
 import com.sampoom.backend.api.stock.dto.PartUpdateRequestDTO;
 import com.sampoom.backend.api.stock.entity.AgencyStock;
 import com.sampoom.backend.api.stock.repository.AgencyStockRepository;
+import com.sampoom.backend.api.stock.repository.DashboardQueryRepository;
 import com.sampoom.backend.common.exception.NotFoundException;
 import com.sampoom.backend.common.response.ErrorStatus;
 import jakarta.transaction.Transactional;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class StockService {
 
     private final AgencyStockRepository agencyStockRepository;
+    private final DashboardQueryRepository dashboardQueryRepository;
     private final AgencyRepository agencyRepository;
 
     // 대리점별 재고 Map (partId → quantity)
@@ -75,5 +78,23 @@ public class StockService {
 
         stock.decreaseQuantity(quantity);
         agencyStockRepository.save(stock);
+    }
+
+    // 대시보드용 재고 요약 정보 (모든 부품 기준)
+    public DashboardResponseDTO getDashboardData(Long agencyId) {
+        // 대리점 존재 여부 확인
+        agencyRepository.findById(agencyId)
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
+
+        log.info("🔍 대리점 {} 대시보드 데이터 조회 시작", agencyId);
+
+        // QueryRepository를 통해 모든 부품 기준으로 계산
+        DashboardResponseDTO result = dashboardQueryRepository.getDashboardData(agencyId);
+
+        log.info("📈 대시보드 결과 - 총부품: {}, 품절: {}, 부족: {}, 총수량: {}",
+                result.getTotalParts(), result.getOutOfStockParts(),
+                result.getLowStockParts(), result.getTotalQuantity());
+
+        return result;
     }
 }
