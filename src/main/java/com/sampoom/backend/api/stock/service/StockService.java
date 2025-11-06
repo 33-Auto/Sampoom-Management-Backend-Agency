@@ -134,7 +134,7 @@ public class StockService {
         long inStockParts = inStockPartsResult != null ? inStockPartsResult : 0L;
 
         Long outStockPartsResult = partHistoryRepository.sumQuantityByAgencyIdAndActionAndDateBetween(
-                agencyId, HistoryAction.INBOUND, startDateTime, endDateTime);
+                agencyId, HistoryAction.OUTBOUND, startDateTime, endDateTime);
         long outStockParts = outStockPartsResult != null ? outStockPartsResult : 0L;
 
         WeeklySummaryResponseDTO result = WeeklySummaryResponseDTO.builder()
