@@ -6,6 +6,7 @@ import com.sampoom.backend.api.stock.dto.DashboardResponseDTO;
 import com.sampoom.backend.api.stock.dto.PartUpdateRequestDTO;
 import com.sampoom.backend.api.stock.dto.WeeklySummaryResponseDTO;
 import com.sampoom.backend.api.stock.entity.AgencyStock;
+import com.sampoom.backend.api.stock.entity.HistoryAction;
 import com.sampoom.backend.api.stock.entity.PartHistory;
 import com.sampoom.backend.api.stock.repository.AgencyStockRepository;
 import com.sampoom.backend.api.stock.repository.DashboardQueryRepository;
@@ -105,14 +106,8 @@ public class StockService {
         agencyRepository.findById(agencyId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
 
-        log.info("🔍 대리점 {} 대시보드 데이터 조회 시작", agencyId);
-
         // QueryRepository를 통해 모든 부품 기준으로 계산
         DashboardResponseDTO result = dashboardQueryRepository.getDashboardData(agencyId);
-
-        log.info("📈 대시보드 결과 - 총부품: {}, 품절: {}, 부족: {}, 총수량: {}",
-                result.getTotalParts(), result.getOutOfStockParts(),
-                result.getLowStockParts(), result.getTotalQuantity());
 
         return result;
     }
@@ -122,8 +117,6 @@ public class StockService {
         // 대리점 존재 여부 확인
         agencyRepository.findById(agencyId)
                 .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
-
-        log.info("🔍 대리점 {} 주간 히스토리 조회 시작", agencyId);
 
         // 이번 주 기간 계산 (월요일 00:00 ~ 일요일 23:59)
         LocalDate today = LocalDate.now();
@@ -137,11 +130,11 @@ public class StockService {
 
         // 실제 PartHistory 데이터 기반으로 수량 합계 계산 (조회 제외)
         Long inStockPartsResult = partHistoryRepository.sumQuantityByAgencyIdAndActionAndDateBetween(
-                agencyId, "INBOUND", startDateTime, endDateTime);
+                agencyId, HistoryAction.INBOUND, startDateTime, endDateTime);
         long inStockParts = inStockPartsResult != null ? inStockPartsResult : 0L;
 
         Long outStockPartsResult = partHistoryRepository.sumQuantityByAgencyIdAndActionAndDateBetween(
-                agencyId, "OUTBOUND", startDateTime, endDateTime);
+                agencyId, HistoryAction.INBOUND, startDateTime, endDateTime);
         long outStockParts = outStockPartsResult != null ? outStockPartsResult : 0L;
 
         WeeklySummaryResponseDTO result = WeeklySummaryResponseDTO.builder()
