@@ -58,6 +58,7 @@ public class PartService {
         List<Part> parts = partReadService.getPartsByGroup(groupId);
         Map<Long, Integer> stockMap = stockService.getStockByAgency(agencyId);
 
+
         return parts.stream()
                 .map(part -> PartWithStockResponseDTO.of(
                         part,
