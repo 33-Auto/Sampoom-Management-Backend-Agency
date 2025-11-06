@@ -135,11 +135,7 @@ public class StockService {
 
         String weekPeriod = String.format("%s ~ %s", startOfWeek, endOfWeek);
 
-        // 실제 PartHistory 데이터 기반으로 수량 합계 계산
-        Long queriedPartsResult = partHistoryRepository.sumQuantityByAgencyIdAndActionAndDateBetween(
-                agencyId, "QUERY", startDateTime, endDateTime);
-        long queriedParts = queriedPartsResult != null ? queriedPartsResult : 0L;
-
+        // 실제 PartHistory 데이터 기반으로 수량 합계 계산 (조회 제외)
         Long inStockPartsResult = partHistoryRepository.sumQuantityByAgencyIdAndActionAndDateBetween(
                 agencyId, "INBOUND", startDateTime, endDateTime);
         long inStockParts = inStockPartsResult != null ? inStockPartsResult : 0L;
@@ -149,24 +145,12 @@ public class StockService {
         long outStockParts = outStockPartsResult != null ? outStockPartsResult : 0L;
 
         WeeklySummaryResponseDTO result = WeeklySummaryResponseDTO.builder()
-                .queriedParts(queriedParts)
                 .inStockParts(inStockParts)
                 .outStockParts(outStockParts)
                 .weekPeriod(weekPeriod)
                 .build();
 
-        log.info("📈 주간 히스토리 결과 - 조회: {}, 입고: {}, 출고: {}, 기간: {}",
-                result.getQueriedParts(), result.getInStockParts(),
-                result.getOutStockParts(), result.getWeekPeriod());
-
         return result;
     }
-
-    // 부품 조회 히스토리 저장
-    @Transactional
-    public void saveQueryHistory(Long agencyId, Long partId) {
-        PartHistory queryHistory = PartHistory.createQueryHistory(agencyId, partId);
-        partHistoryRepository.save(queryHistory);
-    }
-
 }
+
