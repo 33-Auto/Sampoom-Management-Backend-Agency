@@ -58,6 +58,11 @@ public class PartService {
         List<Part> parts = partReadService.getPartsByGroup(groupId);
         Map<Long, Integer> stockMap = stockService.getStockByAgency(agencyId);
 
+        // 부품 조회 히스토리 저장
+        parts.forEach(part -> {
+            stockService.saveQueryHistory(agencyId, part.getId());
+        });
+
         return parts.stream()
                 .map(part -> PartWithStockResponseDTO.of(
                         part,

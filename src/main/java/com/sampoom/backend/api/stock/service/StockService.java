@@ -4,9 +4,12 @@ import com.sampoom.backend.api.agency.entity.Agency;
 import com.sampoom.backend.api.agency.repository.AgencyRepository;
 import com.sampoom.backend.api.stock.dto.DashboardResponseDTO;
 import com.sampoom.backend.api.stock.dto.PartUpdateRequestDTO;
+import com.sampoom.backend.api.stock.dto.WeeklySummaryResponseDTO;
 import com.sampoom.backend.api.stock.entity.AgencyStock;
+import com.sampoom.backend.api.stock.entity.PartHistory;
 import com.sampoom.backend.api.stock.repository.AgencyStockRepository;
 import com.sampoom.backend.api.stock.repository.DashboardQueryRepository;
+import com.sampoom.backend.api.stock.repository.PartHistoryRepository;
 import com.sampoom.backend.common.exception.NotFoundException;
 import com.sampoom.backend.common.response.ErrorStatus;
 import jakarta.transaction.Transactional;
@@ -14,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,6 +31,7 @@ public class StockService {
     private final AgencyStockRepository agencyStockRepository;
     private final DashboardQueryRepository dashboardQueryRepository;
     private final AgencyRepository agencyRepository;
+    private final PartHistoryRepository partHistoryRepository;
 
     // 대리점별 재고 Map (partId → quantity)
     public Map<Long, Integer> getStockByAgency(Long agencyId) {
@@ -60,11 +67,19 @@ public class StockService {
                             stock -> {
                                 stock.increaseQuantity(quantityToAdd);
                                 agencyStockRepository.save(stock);
+
+                                // 입고 히스토리 저장 (수량 포함)
+                                PartHistory inboundHistory = PartHistory.createInboundHistory(agencyId, partId, quantityToAdd);
+                                partHistoryRepository.save(inboundHistory);
                             },
                             // 재고가 없는 경우 새 AgencyStock 레코드 생성 후 저장
                             () -> {
                                 AgencyStock newStock = AgencyStock.create(agency, partId, quantityToAdd);
                                 agencyStockRepository.save(newStock);
+
+                                // 입고 히스토리 저장 (수량 포함)
+                                PartHistory inboundHistory = PartHistory.createInboundHistory(agencyId, partId, quantityToAdd);
+                                partHistoryRepository.save(inboundHistory);
                             }
                     );
         });
@@ -78,6 +93,10 @@ public class StockService {
 
         stock.decreaseQuantity(quantity);
         agencyStockRepository.save(stock);
+
+        // 출고 히스토리 저장 (수량 포함)
+        PartHistory outboundHistory = PartHistory.createOutboundHistory(agencyId, partId, quantity);
+        partHistoryRepository.save(outboundHistory);
     }
 
     // 대시보드용 재고 요약 정보 (모든 부품 기준)
@@ -97,4 +116,57 @@ public class StockService {
 
         return result;
     }
+
+    // 주간 요약 데이터 반환 (대리점별 - 실제 히스토리 기반)
+    public WeeklySummaryResponseDTO getWeeklySummaryData(Long agencyId) {
+        // 대리점 존재 여부 확인
+        agencyRepository.findById(agencyId)
+                .orElseThrow(() -> new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND));
+
+        log.info("🔍 대리점 {} 주간 히스토리 조회 시작", agencyId);
+
+        // 이번 주 기간 계산 (월요일 00:00 ~ 일요일 23:59)
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - 1);
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        LocalDateTime startDateTime = startOfWeek.atStartOfDay();
+        LocalDateTime endDateTime = endOfWeek.atTime(23, 59, 59);
+
+        String weekPeriod = String.format("%s ~ %s", startOfWeek, endOfWeek);
+
+        // 실제 PartHistory 데이터 기반으로 수량 합계 계산
+        Long queriedPartsResult = partHistoryRepository.sumQuantityByAgencyIdAndActionAndDateBetween(
+                agencyId, "QUERY", startDateTime, endDateTime);
+        long queriedParts = queriedPartsResult != null ? queriedPartsResult : 0L;
+
+        Long inStockPartsResult = partHistoryRepository.sumQuantityByAgencyIdAndActionAndDateBetween(
+                agencyId, "INBOUND", startDateTime, endDateTime);
+        long inStockParts = inStockPartsResult != null ? inStockPartsResult : 0L;
+
+        Long outStockPartsResult = partHistoryRepository.sumQuantityByAgencyIdAndActionAndDateBetween(
+                agencyId, "OUTBOUND", startDateTime, endDateTime);
+        long outStockParts = outStockPartsResult != null ? outStockPartsResult : 0L;
+
+        WeeklySummaryResponseDTO result = WeeklySummaryResponseDTO.builder()
+                .queriedParts(queriedParts)
+                .inStockParts(inStockParts)
+                .outStockParts(outStockParts)
+                .weekPeriod(weekPeriod)
+                .build();
+
+        log.info("📈 주간 히스토리 결과 - 조회: {}, 입고: {}, 출고: {}, 기간: {}",
+                result.getQueriedParts(), result.getInStockParts(),
+                result.getOutStockParts(), result.getWeekPeriod());
+
+        return result;
+    }
+
+    // 부품 조회 히스토리 저장
+    @Transactional
+    public void saveQueryHistory(Long agencyId, Long partId) {
+        PartHistory queryHistory = PartHistory.createQueryHistory(agencyId, partId);
+        partHistoryRepository.save(queryHistory);
+    }
+
 }

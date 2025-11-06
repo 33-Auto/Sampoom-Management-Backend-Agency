@@ -2,6 +2,7 @@ package com.sampoom.backend.api.stock.controller;
 
 import com.sampoom.backend.api.stock.dto.DashboardResponseDTO;
 import com.sampoom.backend.api.stock.dto.PartUpdateRequestDTO;
+import com.sampoom.backend.api.stock.dto.WeeklySummaryResponseDTO;
 import com.sampoom.backend.api.stock.service.StockService;
 import com.sampoom.backend.common.response.ApiResponse;
 import com.sampoom.backend.common.response.SuccessStatus;
@@ -31,6 +32,15 @@ public class StockController {
 
         return ApiResponse.success_only(SuccessStatus.OK);
     }
+
+    // 주간 요약 데이터 API
+    @Operation(summary = "대리점 주간 히스토리 조회", description = "대리점의 주간 부품 히스토리 요약 정보를 조회합니다")
+    @GetMapping("/weekly-summary")
+    public ResponseEntity<ApiResponse<WeeklySummaryResponseDTO>> getWeeklySummary(@PathVariable Long agencyId) {
+        WeeklySummaryResponseDTO summary = stockService.getWeeklySummaryData(agencyId);
+        return ApiResponse.success(SuccessStatus.WEEKLY_SUMMARY_SUCCESS, summary);
+    }
+
 
     @Operation(summary = "대리점 대시보드 조회", description = "대리점의 재고 현황을 요약한 대시보드 정보를 조회합니다")
     @GetMapping("/dashboard")

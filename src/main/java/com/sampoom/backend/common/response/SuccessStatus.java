@@ -28,6 +28,7 @@ public enum SuccessStatus {
 
     // 대시보드 관련
     DASHBOARD_SUCCESS(HttpStatus.OK, "대시보드 조회 성공"),
+    WEEKLY_SUMMARY_SUCCESS(HttpStatus.OK, "주간 히스토리 조회 성공"),
 
     CART_ADD_SUCCESS(HttpStatus.OK,  "장바구니 담기 성공"),
     CART_LIST_SUCCESS(HttpStatus.OK, "장바구니 목록 조회 성공"),
