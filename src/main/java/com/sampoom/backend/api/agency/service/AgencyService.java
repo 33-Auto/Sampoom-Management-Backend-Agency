@@ -22,10 +22,12 @@ public class AgencyService {
                 payload.getVendorId(), payload.getVendorCode(), payload.getVendorName());
 
         Agency agency = agencyRepository.findById(payload.getVendorId())
-                .orElse(Agency.builder()
-                        .id(payload.getVendorId())
-                        .code(payload.getVendorCode())
-                        .build());
+                .orElseGet(() -> agencyRepository.findByCode(payload.getVendorCode())
+                        .orElse(Agency.builder()
+                                .id(payload.getVendorId())
+                                .code(payload.getVendorCode())
+                                .build()));
+
 
         log.info("📋 Before update - Agency code: {}, name: {}", agency.getCode(), agency.getName());
 
