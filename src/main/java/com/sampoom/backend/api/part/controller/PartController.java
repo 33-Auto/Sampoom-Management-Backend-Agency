@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,17 +27,19 @@ public class PartController {
 
     @Operation(summary = "대리점 별 부품 카테고리 조회", description = "대리점 별 부품 카테고리 조회")
     @GetMapping("/category")
-    public ResponseEntity<ApiResponse<List<CategorySimpleResponseDTO>>> getCategories() {
-        List<CategorySimpleResponseDTO> categoryList = partService.getCategories();
+    public ResponseEntity<ApiResponse<List<CategorySimpleResponseDTO>>> getCategories(
+            @AuthenticationPrincipal String userId) {
+        List<CategorySimpleResponseDTO> categoryList = partService.getCategories(userId);
         return ApiResponse.success(SuccessStatus.CATEGORY_LIST_SUCCESS, categoryList);
     }
 
     @Operation(summary = "대리점 별 카테고리 별 그룹 조회", description = "대리점 별 카테고리 별 그룹 조회")
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<ApiResponse<List<PartGroupResponseDTO>>> getGroups(
-            @PathVariable Long categoryId
+            @PathVariable Long categoryId,
+            @AuthenticationPrincipal String userId
     ) {
-        List<PartGroupResponseDTO> groupList = partService.getGroups(categoryId);
+        List<PartGroupResponseDTO> groupList = partService.getGroups(categoryId, userId);
         return ApiResponse.success(SuccessStatus.GROUP_LIST_SUCCESS, groupList);
     }
 
@@ -44,9 +47,10 @@ public class PartController {
     @GetMapping("/{agencyId}/group/{groupId}")
     public ResponseEntity<ApiResponse<List<PartWithStockResponseDTO>>> getParts(
             @PathVariable Long agencyId,
-            @PathVariable Long groupId
+            @PathVariable Long groupId,
+            @AuthenticationPrincipal String userId
     ) {
-        List<PartWithStockResponseDTO> partList = partService.getPartsWithStock(agencyId, groupId);
+        List<PartWithStockResponseDTO> partList = partService.getPartsWithStock(agencyId, groupId, userId);
         return ApiResponse.success(SuccessStatus.PART_LIST_SUCCESS, partList);
     }
 
@@ -56,10 +60,10 @@ public class PartController {
             @PathVariable Long agencyId,
             @RequestParam String keyword,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal String userId
     ) {
-        PageResponseDTO<CategoryResponseDTO> result = partService.searchParts(agencyId, keyword, page, size);
+        PageResponseDTO<CategoryResponseDTO> result = partService.searchParts(agencyId, keyword, page, size, userId);
         return ApiResponse.success(SuccessStatus.PART_SEARCH_SUCCESS, result);
     }
-
 }
