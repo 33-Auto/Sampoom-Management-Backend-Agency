@@ -65,6 +65,11 @@ public enum ErrorStatus {
     EVENT_PROCESSING_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Kafka 이벤트 처리 중 예외가 발생했습니다.",10504),
     OUTBOX_SERIALIZATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"Outbox 직렬화에 실패했습니다.",10505),
 
+
+    TOO_SHORT_SECRET_KEY(HttpStatus.BAD_REQUEST, "서명용 비밀키의 길이가 짧습니다. 적어도 32바이트 이상으로 설정하세요.", 12402),
+    NULL_TOKEN(HttpStatus.BAD_REQUEST, "토큰 값은 Null이면 안됩니다.", 12401),
+    BLANK_TOKEN(HttpStatus.BAD_REQUEST, "토큰 값은 공백이면 안됩니다.", 12400),
+
     // 대리점
     AGENCY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 대리점을 찾을 수 없습니다.", 60100),
 

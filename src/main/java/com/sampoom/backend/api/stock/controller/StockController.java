@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Stock", description = "대리점 전용 재고 API")
@@ -25,9 +26,10 @@ public class StockController {
     @PatchMapping("/stock")
     public ResponseEntity<ApiResponse<Void>> stockingParts(
             @PathVariable Long agencyId,
+            @AuthenticationPrincipal String userId,
             @Valid @RequestBody PartUpdateRequestDTO partUpdateRequestDTO) {
 
-        // 여러 품목에 대한 일괄 입고 처리
+        // 여러 품목에 대한 일괄 입고 처리 (대리점별 공유 재고)
         stockService.processOrderReceiving(agencyId, partUpdateRequestDTO);
 
         return ApiResponse.success_only(SuccessStatus.OK);
@@ -36,17 +38,20 @@ public class StockController {
     // 주간 요약 데이터 API
     @Operation(summary = "대리점 주간 히스토리 조회", description = "대리점의 주간 부품 히스토리 요약 정보를 조회합니다")
     @GetMapping("/weekly-summary")
-    public ResponseEntity<ApiResponse<WeeklySummaryResponseDTO>> getWeeklySummary(@PathVariable Long agencyId) {
+    public ResponseEntity<ApiResponse<WeeklySummaryResponseDTO>> getWeeklySummary(
+            @PathVariable Long agencyId,
+            @AuthenticationPrincipal String userId) {
         WeeklySummaryResponseDTO summary = stockService.getWeeklySummaryData(agencyId);
         return ApiResponse.success(SuccessStatus.WEEKLY_SUMMARY_SUCCESS, summary);
     }
 
-
     @Operation(summary = "대리점 대시보드 조회", description = "대리점의 재고 현황을 요약한 대시보드 정보를 조회합니다")
     @GetMapping("/dashboard")
-    public ResponseEntity<ApiResponse<DashboardResponseDTO>> getDashboard(@PathVariable Long agencyId) {
+    public ResponseEntity<ApiResponse<DashboardResponseDTO>> getDashboard(
+            @PathVariable Long agencyId,
+            @AuthenticationPrincipal String userId) {
         DashboardResponseDTO dashboard = stockService.getDashboardData(agencyId);
         return ApiResponse.success(SuccessStatus.DASHBOARD_SUCCESS, dashboard);
     }
-
 }
+
