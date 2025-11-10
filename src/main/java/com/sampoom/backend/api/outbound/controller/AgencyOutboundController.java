@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,18 +28,18 @@ public class AgencyOutboundController {
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> addItem(
             @PathVariable Long agencyId,
+            @AuthenticationPrincipal String userId,
             @Valid @RequestBody AgencyOutboundRequestDTO request) {
-        outboundService.addItem(agencyId, request);
-
+        outboundService.addItem(agencyId, userId, request);
         return ApiResponse.success(SuccessStatus.OUTBOUND_ADD_SUCCESS, null);
     }
 
     @Operation(summary = "출고 목록 조회")
     @GetMapping
     public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> getItems(
-            @PathVariable Long agencyId) {
-        List<CategoryResponseDTO> list = outboundService.getOutboundItems(agencyId);
-
+            @PathVariable Long agencyId,
+            @AuthenticationPrincipal String userId) {
+        List<CategoryResponseDTO> list = outboundService.getOutboundItems(agencyId, userId);
         return ApiResponse.success(SuccessStatus.OUTBOUND_LIST_SUCCESS, list);
     }
 
@@ -47,8 +48,9 @@ public class AgencyOutboundController {
     public ResponseEntity<ApiResponse<Void>> updateQuantity(
             @PathVariable Long agencyId,
             @PathVariable Long outboundId,
+            @AuthenticationPrincipal String userId,
             @RequestBody @Valid AgencyOutboundUpdateRequestDTO request) {
-        outboundService.updateQuantity(agencyId, outboundId, request.getQuantity());
+        outboundService.updateQuantity(agencyId, outboundId, userId, request.getQuantity());
         return ApiResponse.success(SuccessStatus.OUTBOUND_UPDATE_SUCCESS, null);
     }
 
@@ -56,15 +58,18 @@ public class AgencyOutboundController {
     @DeleteMapping("/{outboundId}")
     public ResponseEntity<ApiResponse<Void>> deleteItem(
             @PathVariable Long agencyId,
-            @PathVariable Long outboundId) {
-        outboundService.deleteItem(agencyId, outboundId);
+            @PathVariable Long outboundId,
+            @AuthenticationPrincipal String userId) {
+        outboundService.deleteItem(agencyId, outboundId, userId);
         return ApiResponse.success(SuccessStatus.OUTBOUND_DELETE_SUCCESS, null);
     }
 
     @Operation(summary = "출고 처리")
     @PostMapping("/process")
-    public ResponseEntity<ApiResponse<Void>> processOutbound(@PathVariable Long agencyId) {
-        outboundService.processOutbound(agencyId);
+    public ResponseEntity<ApiResponse<Void>> processOutbound(
+            @PathVariable Long agencyId,
+            @AuthenticationPrincipal String userId) {
+        outboundService.processOutbound(agencyId, userId);
         return ApiResponse.success(SuccessStatus.OUTBOUND_PROCESS_SUCCESS, null);
     }
 }

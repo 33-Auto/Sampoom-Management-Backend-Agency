@@ -92,6 +92,7 @@ public enum ErrorStatus {
 
     // 출고
     OUTBOUND_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "출고 항목을 찾을 수 없습니다.", 62100),
+    OUTBOUND_LIST_EMPTY(HttpStatus.NOT_FOUND, "출고 목록이 비어 있습니다.", 62101),
 
     // 부품
     PART_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 부품을 찾을 수 없습니다.", 63100),
