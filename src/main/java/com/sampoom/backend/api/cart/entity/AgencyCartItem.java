@@ -26,6 +26,9 @@ public class AgencyCartItem {
     @JoinColumn(name = "agency_id")
     private Agency agency;
 
+    @Column(name = "user_id", nullable = false)
+    private String userId;
+
     private Long partId;
 
     private String partName;
@@ -48,9 +51,10 @@ public class AgencyCartItem {
         this.quantity = quantity;
     }
 
-    public static AgencyCartItem create(Agency agency, Part part, int quantity) {
+    public static AgencyCartItem create(Agency agency, String userId, Part part, int quantity) {
         return AgencyCartItem.builder()
                 .agency(agency)
+                .userId(userId)
                 .partId(part.getId())
                 .partName(part.getName())
                 .partCode(part.getCode())
