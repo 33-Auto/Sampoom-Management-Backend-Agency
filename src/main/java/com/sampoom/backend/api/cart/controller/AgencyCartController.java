@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,9 +29,10 @@ public class AgencyCartController {
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> addCartItem(
             @PathVariable Long agencyId,
+            @AuthenticationPrincipal String userId,
             @Valid @RequestBody AgencyCartRequestDTO agencyCartRequestDTO
     ) {
-        agencyCartService.addCartItem(agencyId, agencyCartRequestDTO);
+        agencyCartService.addCartItem(agencyId, userId, agencyCartRequestDTO);
         return ApiResponse.success(SuccessStatus.CART_ADD_SUCCESS, null);
     }
 
@@ -38,9 +40,10 @@ public class AgencyCartController {
     @Operation(summary = "장바구니 목록 조회", description = "대리점의 장바구니에 담긴 부품 목록을 조회합니다.")
     @GetMapping
     public ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> getCartItems(
-            @PathVariable Long agencyId
+            @PathVariable Long agencyId,
+            @AuthenticationPrincipal String userId
     ) {
-        List<CategoryResponseDTO> result = agencyCartService.getCartItems(agencyId);
+        List<CategoryResponseDTO> result = agencyCartService.getCartItems(agencyId, userId);
         return ApiResponse.success(SuccessStatus.CART_LIST_SUCCESS, result);
     }
 
@@ -50,9 +53,10 @@ public class AgencyCartController {
     public ResponseEntity<ApiResponse<Void>> updateCartItem(
             @PathVariable Long agencyId,
             @PathVariable Long cartItemId,
+            @AuthenticationPrincipal String userId,
             @Valid @RequestBody AgencyCartUpdateRequestDTO agencyCartUpdateRequestDTO
     ) {
-        agencyCartService.updateCartItem(agencyId, cartItemId, agencyCartUpdateRequestDTO);
+        agencyCartService.updateCartItem(agencyId, cartItemId, userId, agencyCartUpdateRequestDTO);
         return ApiResponse.success(SuccessStatus.CART_UPDATE_SUCCESS, null);
     }
 
@@ -61,17 +65,21 @@ public class AgencyCartController {
     @DeleteMapping("/{cartItemId}")
     public ResponseEntity<ApiResponse<Void>> deleteCartItem(
             @PathVariable Long agencyId,
-            @PathVariable Long cartItemId
+            @PathVariable Long cartItemId,
+            @AuthenticationPrincipal String userId
     ) {
-        agencyCartService.deleteCartItem(agencyId, cartItemId);
+        agencyCartService.deleteCartItem(agencyId, cartItemId, userId);
         return ApiResponse.success(SuccessStatus.CART_DELETE_SUCCESS, null);
     }
 
     // 장바구니 전체 비우기
     @Operation(summary = "장바구니 전체 비우기", description = "대리점의 장바구니를 전체 비웁니다.")
     @DeleteMapping("/clear")
-    public ResponseEntity<ApiResponse<Void>> clearCart(@PathVariable Long agencyId) {
-        agencyCartService.clearCart(agencyId);
+    public ResponseEntity<ApiResponse<Void>> clearCart(
+            @PathVariable Long agencyId,
+            @AuthenticationPrincipal String userId
+    ) {
+        agencyCartService.clearCart(agencyId, userId);
         return ApiResponse.success(SuccessStatus.CART_CLEAR_SUCCESS, null);
     }
 }

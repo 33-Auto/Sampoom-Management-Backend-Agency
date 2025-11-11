@@ -26,6 +26,9 @@ public class AgencyOutboundItem {
     @JoinColumn(name = "agency_id")
     private Agency agency;
 
+    @Column(name = "user_id", nullable = false)
+    private String userId;
+
     private Long partId;
 
     private String partName;
@@ -42,7 +45,7 @@ public class AgencyOutboundItem {
         this.quantity = newQuantity;
     }
 
-    public static AgencyOutboundItem create(Agency agency, Part part, int quantity) {
+    public static AgencyOutboundItem create(Agency agency, String userId, Part part, int quantity) {
 
         if (quantity <= 0) {
             throw new BadRequestException(ErrorStatus.INVALID_QUANTITY);
@@ -50,6 +53,7 @@ public class AgencyOutboundItem {
 
         return AgencyOutboundItem.builder()
                 .agency(agency)
+                .userId(userId)
                 .partId(part.getId())
                 .partName(part.getName())
                 .partCode(part.getCode())
