@@ -8,7 +8,6 @@ import com.sampoom.backend.api.part.dto.PartGroupResponseDTO;
 import com.sampoom.backend.api.part.entity.Part;
 import com.sampoom.backend.api.part.entity.Category;
 import com.sampoom.backend.api.part.entity.PartGroup;
-import com.sampoom.backend.api.part.repository.PartQueryRepository;
 import com.sampoom.backend.api.stock.service.StockService;
 import com.sampoom.backend.common.dto.CategoryResponseDTO;
 import com.sampoom.backend.common.exception.NotFoundException;
@@ -30,29 +29,24 @@ public class PartService {
     private final PartReadService partReadService;
     private final StockService stockService;
     private final AgencyRepository agencyRepository;
-    private final PartQueryRepository partQueryRepository;
     private final ResponseMapper responseMapper;
 
-    // 카테고리 목록 조회 (JWT 토큰 검증됨)
-    public List<CategorySimpleResponseDTO> getCategories(String userId) {
-        // userId는 토큰 검증용으로만 사용
+    // 카테고리 목록 조회
+    public List<CategorySimpleResponseDTO> getCategories() {
         return partReadService.getCategories().stream()
                 .map(CategorySimpleResponseDTO::fromEntity)
                 .toList();
     }
 
-    // 카테고리 내 그룹 목록 조회 (JWT 토큰 검증됨)
-    public List<PartGroupResponseDTO> getGroups(Long categoryId, String userId) {
-        // userId는 토큰 검증용으로만 사용
+    // 카테고리 내 그룹 목록 조회
+    public List<PartGroupResponseDTO> getGroups(Long categoryId) {
         return partReadService.getGroupsByCategory(categoryId).stream()
                 .map(PartGroupResponseDTO::fromEntity)
                 .toList();
     }
 
-    // 그룹별 부품 목록 + 재고 포함 (JWT 토큰 검증됨)
-    public List<PartWithStockResponseDTO> getPartsWithStock(Long agencyId, Long groupId, String userId) {
-        // userId는 토큰 검증용으로만 사용
-
+    // 그룹별 부품 목록 + 재고 포함
+    public List<PartWithStockResponseDTO> getPartsWithStock(Long agencyId, Long groupId) {
         // 대리점 존재 여부 확인
         if (!agencyRepository.existsById(agencyId)) {
             throw new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND);
@@ -73,15 +67,14 @@ public class PartService {
                 .toList();
     }
 
-    // 부품 검색 (JWT 토큰 검증됨)
-    public PageResponseDTO<CategoryResponseDTO> searchParts(Long agencyId, String keyword, int page, int size, String userId) {
-        // userId는 토큰 검증용으로만 사용
-
+    // 부품 검색
+    public PageResponseDTO<CategoryResponseDTO> searchParts(Long agencyId, String keyword, int page, int size) {
         // 대리점 존재 여부 확인
         if (!agencyRepository.existsById(agencyId)) {
             throw new NotFoundException(ErrorStatus.AGENCY_NOT_FOUND);
         }
 
+        // ...existing code...
         // 부품 검색 (페이징 없이 전체 조회 후 수동 페이징)
         List<Part> allParts = partReadService.searchParts(keyword);
 

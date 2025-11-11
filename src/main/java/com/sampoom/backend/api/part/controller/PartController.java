@@ -27,19 +27,17 @@ public class PartController {
 
     @Operation(summary = "대리점 별 부품 카테고리 조회", description = "대리점 별 부품 카테고리 조회")
     @GetMapping("/category")
-    public ResponseEntity<ApiResponse<List<CategorySimpleResponseDTO>>> getCategories(
-            @AuthenticationPrincipal String userId) {
-        List<CategorySimpleResponseDTO> categoryList = partService.getCategories(userId);
+    public ResponseEntity<ApiResponse<List<CategorySimpleResponseDTO>>> getCategories() {
+        List<CategorySimpleResponseDTO> categoryList = partService.getCategories();
         return ApiResponse.success(SuccessStatus.CATEGORY_LIST_SUCCESS, categoryList);
     }
 
     @Operation(summary = "대리점 별 카테고리 별 그룹 조회", description = "대리점 별 카테고리 별 그룹 조회")
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<ApiResponse<List<PartGroupResponseDTO>>> getGroups(
-            @PathVariable Long categoryId,
-            @AuthenticationPrincipal String userId
+            @PathVariable Long categoryId
     ) {
-        List<PartGroupResponseDTO> groupList = partService.getGroups(categoryId, userId);
+        List<PartGroupResponseDTO> groupList = partService.getGroups(categoryId);
         return ApiResponse.success(SuccessStatus.GROUP_LIST_SUCCESS, groupList);
     }
 
@@ -47,10 +45,9 @@ public class PartController {
     @GetMapping("/{agencyId}/group/{groupId}")
     public ResponseEntity<ApiResponse<List<PartWithStockResponseDTO>>> getParts(
             @PathVariable Long agencyId,
-            @PathVariable Long groupId,
-            @AuthenticationPrincipal String userId
+            @PathVariable Long groupId
     ) {
-        List<PartWithStockResponseDTO> partList = partService.getPartsWithStock(agencyId, groupId, userId);
+        List<PartWithStockResponseDTO> partList = partService.getPartsWithStock(agencyId, groupId);
         return ApiResponse.success(SuccessStatus.PART_LIST_SUCCESS, partList);
     }
 
@@ -60,10 +57,9 @@ public class PartController {
             @PathVariable Long agencyId,
             @RequestParam String keyword,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @AuthenticationPrincipal String userId
+            @RequestParam(defaultValue = "10") int size
     ) {
-        PageResponseDTO<CategoryResponseDTO> result = partService.searchParts(agencyId, keyword, page, size, userId);
+        PageResponseDTO<CategoryResponseDTO> result = partService.searchParts(agencyId, keyword, page, size);
         return ApiResponse.success(SuccessStatus.PART_SEARCH_SUCCESS, result);
     }
 }
